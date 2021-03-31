@@ -25,3 +25,6 @@ hs_err_pid*
 # IntelliJ
 .gradle
 .idea
+
+# Custom
+application.properties
