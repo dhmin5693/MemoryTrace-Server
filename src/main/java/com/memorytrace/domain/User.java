@@ -31,6 +31,11 @@ public class User extends BaseTimeEntity {
     private byte isWithdrawal;
 
     @Builder
+    public User(long uid) {
+        this.uid = uid;
+    }
+
+    @Builder
     public User(String nickname, String sns_key, String profile_img, byte is_withdrawal) {
         this.nickname = nickname;
         this.snsKey = sns_key;

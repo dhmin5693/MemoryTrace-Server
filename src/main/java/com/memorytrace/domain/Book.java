@@ -1,6 +1,5 @@
 package com.memorytrace.domain;
 
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +10,6 @@ import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @NoArgsConstructor
@@ -32,19 +30,18 @@ public class Book extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT", nullable = false)
     private byte bgColor;
 
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID inviteCode;
+    @Column(columnDefinition = "VARCHAR(36)")
+    private String inviteCode;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private byte isDelete;
 
     @Builder
-    public Book(User user, String title, byte bgColor, byte isDelete) {
+    public Book(User user, String title, byte bgColor, String inviteCode, byte isDelete) {
         this.user = user;
         this.title = title;
         this.bgColor = bgColor;
+        this.inviteCode = inviteCode;
         this.isDelete = isDelete;
     }
 }
