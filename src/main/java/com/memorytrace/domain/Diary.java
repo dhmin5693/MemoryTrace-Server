@@ -18,7 +18,7 @@ public class Diary extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long did;
+    private Long did;
 
     @ManyToOne
     @JoinColumn(name = "uid", referencedColumnName = "uid")
