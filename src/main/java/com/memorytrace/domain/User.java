@@ -31,10 +31,10 @@ public class User extends BaseTimeEntity {
     private byte isWithdrawal;
 
     @Builder
-    public User(String nickname, String sns_key, String profile_img, byte is_withdrawal) {
+    public User(String nickname, String snsKey, String profileImg, byte isWithdrawal) {
         this.nickname = nickname;
-        this.snsKey = sns_key;
-        this.profileImg = profile_img;
-        this.isWithdrawal = is_withdrawal;
+        this.snsKey = snsKey;
+        this.profileImg = profileImg;
+        this.isWithdrawal = isWithdrawal;
     }
 }
