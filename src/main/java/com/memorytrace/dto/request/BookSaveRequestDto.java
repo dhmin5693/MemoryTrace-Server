@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class BookSaveRequestDto {
 
     @NotNull
-    @ApiModelProperty(position = 1, required = true, dataType = "long", value = "현재 차례인 uid")
-    private long whoseTurn;
+    @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "현재 차례인 uid")
+    private Long whoseTurn;
 
     @NotNull
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "book 제목")
@@ -32,7 +32,7 @@ public class BookSaveRequestDto {
     private byte isDelete;
 
     @Builder
-    public BookSaveRequestDto(long whoseTurn, String title, byte bgColor, byte isDelete) {
+    public BookSaveRequestDto(Long whoseTurn, String title, byte bgColor, byte isDelete) {
         this.whoseTurn = whoseTurn;
         this.title = title;
         this.bgColor = bgColor;

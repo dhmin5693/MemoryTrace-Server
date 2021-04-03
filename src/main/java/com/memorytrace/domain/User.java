@@ -16,7 +16,7 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long uid;
+    private Long uid;
 
     @Column(length = 50, nullable = false)
     private String nickname;
@@ -31,7 +31,7 @@ public class User extends BaseTimeEntity {
     private byte isWithdrawal;
 
     @Builder(builderClassName = "ByUidBuilder", builderMethodName = "ByUidBuilder")
-    public User(long uid) {
+    public User(Long uid) {
         this.uid = uid;
     }
 

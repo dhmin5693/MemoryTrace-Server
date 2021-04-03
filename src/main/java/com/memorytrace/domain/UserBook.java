@@ -22,11 +22,11 @@ public class UserBook {
 
     @Id
     @Column(name = "uid", insertable = false, updatable = false)
-    private long uid;
+    private Long uid;
 
     @Id
     @Column(name = "bid", insertable = false, updatable = false)
-    private long bid;
+    private Long bid;
 
     @ManyToOne
     @JoinColumn(name = "uid", referencedColumnName = "uid", insertable = false, updatable = false)
@@ -37,13 +37,13 @@ public class UserBook {
     private Book book;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long turnNo;
+    private Long turnNo;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
-    private byte isWithdrawal;
+    private Byte isWithdrawal;
 
     @Builder
-    public UserBook(long uid, long bid, long turnNo, byte isWithdrawal) {
+    public UserBook(Long uid, Long bid, Long turnNo, byte isWithdrawal) {
         this.uid = uid;
         this.bid = bid;
         this.turnNo = turnNo;

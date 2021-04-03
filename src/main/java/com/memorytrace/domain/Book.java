@@ -18,7 +18,7 @@ public class Book extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long bid;
+    private Long bid;
 
     @ManyToOne
     @JoinColumn(name = "whose_turn", referencedColumnName = "uid")
