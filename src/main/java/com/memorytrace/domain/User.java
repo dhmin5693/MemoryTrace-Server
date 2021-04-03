@@ -30,7 +30,12 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private byte isWithdrawal;
 
-    @Builder
+    @Builder(builderClassName = "ByUidBuilder", builderMethodName = "ByUidBuilder")
+    public User(long uid) {
+        this.uid = uid;
+    }
+
+    @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
     public User(String nickname, String snsKey, String profileImg, byte isWithdrawal) {
         this.nickname = nickname;
         this.snsKey = snsKey;

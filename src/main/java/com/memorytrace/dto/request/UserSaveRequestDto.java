@@ -32,7 +32,7 @@ public class UserSaveRequestDto {
     }
 
     public User toEntity() {
-        return User.builder()
+        return User.ByUserBuilder()
             .nickname(nickname)
             .snsKey(snsKey)
             .profileImg(profileImg)

@@ -1,7 +1,7 @@
 package com.memorytrace.controller;
 
-import com.memorytrace.dto.request.UserSaveRequestDto;
-import com.memorytrace.service.UserService;
+import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -14,21 +14,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "User 관련 API", tags = "User")
+@Api(value = "Book 관련 API", tags = "Book")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/book")
 @RequiredArgsConstructor
-public class UserController {
+public class BookController {
 
-    private final UserService userService;
+    private final BookService bookService;
 
-    @ApiOperation(value = "사용자 생성")
+    @ApiOperation(value = "Book 생성")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "사용자 생성 완료")
+        @ApiResponse(code = 200, message = "Book 생성 완료")
     })
+
     @PostMapping
-    public ResponseEntity save(@RequestBody @Valid UserSaveRequestDto request) {
-        userService.save(request);
+    public ResponseEntity save(@RequestBody @Valid BookSaveRequestDto request) {
+        bookService.save(request);
         return ResponseEntity.ok("OK");
     }
 }
