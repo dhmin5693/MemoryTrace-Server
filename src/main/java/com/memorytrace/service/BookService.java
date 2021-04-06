@@ -32,7 +32,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public List<BookListResponseDto> findByUidAndIsWithdrawal(Long uid) {
         List<UserBook> userBook = userBookRepository
-            .findByUidAndIsWithdrawal(uid, new Byte((byte) 0));
+            .findByUidAndIsWithdrawal(uid, (byte) 0);
         List<BookListResponseDto> list = new ArrayList<>();
         for (UserBook ub : userBook) {
             list.add(new BookListResponseDto(ub));

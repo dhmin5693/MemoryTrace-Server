@@ -11,7 +11,7 @@ public class BookListResponseDto {
     private Long bid;
     private String nickname;
     private String title;
-    private byte bgColor;
+    private Byte bgColor;
     private String modifiedDate;
 
     public BookListResponseDto(UserBook entity) {

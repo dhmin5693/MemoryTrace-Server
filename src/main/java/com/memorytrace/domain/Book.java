@@ -10,10 +10,12 @@ import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class Book extends BaseTimeEntity {
 
     @Id
@@ -28,16 +30,16 @@ public class Book extends BaseTimeEntity {
     private String title;
 
     @Column(columnDefinition = "TINYINT", nullable = false)
-    private byte bgColor;
+    private Byte bgColor;
 
     @Column(columnDefinition = "VARCHAR(36)")
     private String inviteCode;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
-    private byte isDelete;
+    private Byte isDelete;
 
     @Builder
-    public Book(User user, String title, byte bgColor, String inviteCode, byte isDelete) {
+    public Book(User user, String title, Byte bgColor, String inviteCode, Byte isDelete) {
         this.user = user;
         this.title = title;
         this.bgColor = bgColor;
