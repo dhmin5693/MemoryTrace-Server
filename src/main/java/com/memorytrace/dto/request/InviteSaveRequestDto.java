@@ -3,6 +3,7 @@ package com.memorytrace.dto.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +19,10 @@ public class InviteSaveRequestDto {
     @NotNull
     @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "초대될 아이디")
     private Long uid;
+
+    @Builder
+    public InviteSaveRequestDto(String inviteCode, Long uid) {
+        this.inviteCode = inviteCode;
+        this.uid = uid;
+    }
 }

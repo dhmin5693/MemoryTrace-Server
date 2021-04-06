@@ -23,7 +23,7 @@ public class InviteController {
 
     @ApiOperation(value = "초대 코드를 이용하여 사용자 초대하기")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "사용자 초대 완료")
+        @ApiResponse(code = 201, message = "사용자 초대 완료")
     })
     @PostMapping
     // TODO: 토큰 방식으로 추후 수정될 수 있음

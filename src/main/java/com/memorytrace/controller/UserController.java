@@ -24,7 +24,7 @@ public class UserController {
 
     @ApiOperation(value = "사용자 생성")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "사용자 생성 완료")
+        @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
     @PostMapping
     public ResponseEntity save(@RequestBody @Valid UserSaveRequestDto request) {
