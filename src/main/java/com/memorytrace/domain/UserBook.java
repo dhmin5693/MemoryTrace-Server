@@ -2,8 +2,6 @@ package com.memorytrace.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -36,14 +34,14 @@ public class UserBook {
     @JoinColumn(name = "bid", referencedColumnName = "bid", insertable = false, updatable = false)
     private Book book;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long turnNo;
+    @Column(columnDefinition = "INT DEFAULT 0", nullable = false)
+    private Integer turnNo;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private Byte isWithdrawal;
 
     @Builder
-    public UserBook(Long uid, Long bid, Long turnNo, byte isWithdrawal) {
+    public UserBook(Long uid, Long bid, Integer turnNo, Byte isWithdrawal) {
         this.uid = uid;
         this.bid = bid;
         this.turnNo = turnNo;
