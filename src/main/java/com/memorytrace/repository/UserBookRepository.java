@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserBookRepository extends JpaRepository<UserBook, UserBookPK> {
 
     List<UserBook> findByUidAndIsWithdrawal(Long uid, Byte isWithdrawal);
+
+    List<UserBook> findByBidAndIsWithdrawal(Long bid, Byte isWithdrawal);
+
 }
