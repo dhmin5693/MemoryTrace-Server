@@ -28,7 +28,7 @@ public class BookController {
 
     @ApiOperation(value = "Book 생성")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Book 생성 완료")
+        @ApiResponse(code = 201, message = "Book 생성 완료")
     })
     @PostMapping
     public ResponseEntity save(@RequestBody @Valid BookSaveRequestDto request) {

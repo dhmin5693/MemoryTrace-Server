@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -25,6 +26,7 @@ hs_err_pid*
 # IntelliJ
 .gradle
 .idea
+memory-trace-api.iml
 
 # Custom
 application.properties
