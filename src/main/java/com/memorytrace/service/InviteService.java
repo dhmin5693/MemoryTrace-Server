@@ -23,6 +23,7 @@ public class InviteService {
     @Transactional
     public void save(InviteSaveRequestDto request) {
         findbyUid(request.getUid());
+
         Long bid = findByInviteCode(request.getInviteCode()).getBid();
         List<UserBook> userBook = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
 
