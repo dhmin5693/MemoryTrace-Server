@@ -1,12 +1,11 @@
 package com.memorytrace.controller;
 
-import com.memorytrace.dto.request.UserSaveRequestDto;
-import com.memorytrace.service.UserService;
+import com.memorytrace.dto.request.InviteSaveRequestDto;
+import com.memorytrace.service.InviteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,21 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "User 관련 API", tags = "User")
+@Api(value = "초대 관련 API", tags = "Invite")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/invite")
 @RequiredArgsConstructor
-public class UserController {
+public class InviteController {
 
-    private final UserService userService;
+    private final InviteService inviteService;
 
-    @ApiOperation(value = "사용자 생성")
+    @ApiOperation(value = "초대 코드를 이용하여 사용자 초대하기")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "사용자 생성 완료")
+        @ApiResponse(code = 201, message = "사용자 초대 완료")
     })
     @PostMapping
-    public ResponseEntity save(@RequestBody @Valid UserSaveRequestDto request) {
-        userService.save(request);
+    // TODO: 토큰 방식으로 추후 수정될 수 있음
+    public ResponseEntity invite(@RequestBody InviteSaveRequestDto request) {
+        inviteService.save(request);
         return ResponseEntity.ok("OK");
     }
 }
