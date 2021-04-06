@@ -8,10 +8,12 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class User extends BaseTimeEntity {
 
     @Id
@@ -28,7 +30,7 @@ public class User extends BaseTimeEntity {
     private String profileImg;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
-    private byte isWithdrawal;
+    private Byte isWithdrawal;
 
     @Builder(builderClassName = "ByUidBuilder", builderMethodName = "ByUidBuilder")
     public User(Long uid) {
@@ -36,7 +38,7 @@ public class User extends BaseTimeEntity {
     }
 
     @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
-    public User(String nickname, String snsKey, String profileImg, byte isWithdrawal) {
+    public User(String nickname, String snsKey, String profileImg, Byte isWithdrawal) {
         this.nickname = nickname;
         this.snsKey = snsKey;
         this.profileImg = profileImg;

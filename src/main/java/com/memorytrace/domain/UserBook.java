@@ -10,10 +10,12 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 @IdClass(UserBookPK.class)
 @Table(name = "user_book")
 public class UserBook {
