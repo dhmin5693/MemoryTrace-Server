@@ -7,7 +7,6 @@ import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,12 +37,7 @@ public class BookService {
         for (UserBook ub : userBook) {
             list.add(new BookListResponseDto(ub));
         }
-        Collections.sort(list, new Comparator<BookListResponseDto>() {
-            @Override
-            public int compare(BookListResponseDto b1, BookListResponseDto b2) {
-                return b2.getModifiedDate().compareTo(b1.getModifiedDate());
-            }
-        });
+        Collections.sort(list, (b1, b2) -> b2.getModifiedDate().compareTo(b1.getModifiedDate()));
         return list;
     }
 }
