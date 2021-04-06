@@ -10,15 +10,17 @@ import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class Diary extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long did;
+    private Long did;
 
     @ManyToOne
     @JoinColumn(name = "uid", referencedColumnName = "uid")
@@ -38,20 +40,20 @@ public class Diary extends BaseTimeEntity {
     private String content;
 
     @Column(columnDefinition = "TINYINT")
-    private byte weather;
+    private Byte weather;
 
     @Column(columnDefinition = "TINYINT")
-    private byte alignment;
+    private Byte alignment;
 
     @Column(columnDefinition = "TINYINT", nullable = false)
-    private byte bgColor;
+    private Byte bgColor;
 
     @Column(columnDefinition = "TINYINT", nullable = false)
-    private byte template;
+    private Byte template;
 
     @Builder
-    public Diary(User user, Book book, String title, String img, String content, byte weather,
-        byte alignment, byte bgColor, byte template) {
+    public Diary(User user, Book book, String title, String img, String content, Byte weather,
+        Byte alignment, Byte bgColor, Byte template) {
         this.user = user;
         this.book = book;
         this.title = title;
