@@ -54,8 +54,8 @@ public class S3Uploder {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        String fileTpye = file.getContentType().replace("/", ".");
-        String fileName = UUID.randomUUID().toString() + fileTpye;
+        String fileType = file.getContentType().replace("/", ".");
+        String fileName = UUID.randomUUID().toString() + fileType;
         File convertFile = new File(fileName);
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
