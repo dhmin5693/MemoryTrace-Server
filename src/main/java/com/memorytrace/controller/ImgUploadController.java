@@ -24,7 +24,7 @@ public class ImgUploadController {
 
     @ApiOperation(value = "프로필 이미지 업로드 시 해당 API 사용")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "프로필 이미지 미지 링크 생성 완료")
+        @ApiResponse(code = 201, message = "프로필 이미지 링크 생성 완료")
     })
     @PostMapping("/profile-img")
     public ResponseEntity<String> uploadProfileImg(@RequestParam("files") MultipartFile files)
@@ -34,7 +34,7 @@ public class ImgUploadController {
 
     @ApiOperation(value = "다이어리 이미지 업로드 시 해당 API 사용")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "다이어리 이미지 미지 링크 생성 완료")
+        @ApiResponse(code = 201, message = "다이어리 이미지 링크 생성 완료")
     })
     @PostMapping("/diary-img")
     public ResponseEntity<String> uploadDiaryImg(@RequestParam("files") MultipartFile files)
