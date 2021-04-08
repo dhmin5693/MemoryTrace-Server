@@ -41,8 +41,7 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("기록이 최고야 API with Swagger")
-            .description("스웨거 테스트")
+            .title("Memory Trace API with Swagger")
             .version("2.0")
             .build();
     }
