@@ -41,4 +41,14 @@ public class ImgUploadController {
         throws IOException {
         return ResponseEntity.ok(s3Uploder.upload(files, "diary"));
     }
+
+    @ApiOperation(value = "스티커 배경 이미지 업로드 시 해당 API 사용")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "스티커 배경 이미지 링크 생성 완료")
+    })
+    @PostMapping("/sticker-img")
+    public ResponseEntity<String> uploadStickerImg(@RequestParam("files") MultipartFile files)
+        throws IOException {
+        return ResponseEntity.ok(s3Uploder.upload(files, "sticker"));
+    }
 }
