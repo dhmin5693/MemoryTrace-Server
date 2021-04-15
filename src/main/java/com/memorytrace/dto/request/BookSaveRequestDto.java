@@ -27,11 +27,15 @@ public class BookSaveRequestDto {
     @ApiModelProperty(position = 3, required = true)
     private Byte bgColor;
 
+    @ApiModelProperty(position = 4, required = true)
+    private String stickerImg;
+
     @Builder
-    public BookSaveRequestDto(Long whoseTurn, String title, Byte bgColor) {
+    public BookSaveRequestDto(Long whoseTurn, String title, Byte bgColor, String stickerImg) {
         this.whoseTurn = whoseTurn;
         this.title = title;
         this.bgColor = bgColor;
+        this.stickerImg = stickerImg;
     }
 
     public Book toEntity() {
@@ -39,6 +43,7 @@ public class BookSaveRequestDto {
             .user(new User(whoseTurn))
             .title(title)
             .bgColor(bgColor)
+            .stickerImg(stickerImg)
             .inviteCode(UUID.randomUUID().toString())
             .build();
     }
