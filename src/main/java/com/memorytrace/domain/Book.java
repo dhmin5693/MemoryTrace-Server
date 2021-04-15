@@ -32,6 +32,9 @@ public class Book extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Byte bgColor;
 
+    @Column(length = 256)
+    private String stickerImg;
+
     @Column(columnDefinition = "VARCHAR(36)")
     private String inviteCode;
 
@@ -39,10 +42,12 @@ public class Book extends BaseTimeEntity {
     private Byte isDelete;
 
     @Builder
-    public Book(User user, String title, Byte bgColor, String inviteCode, Byte isDelete) {
+    public Book(User user, String title, Byte bgColor, String stickerImg, String inviteCode,
+        Byte isDelete) {
         this.user = user;
         this.title = title;
         this.bgColor = bgColor;
+        this.stickerImg = stickerImg;
         this.inviteCode = inviteCode;
         this.isDelete = isDelete;
     }
