@@ -2,10 +2,7 @@ package com.memorytrace.dto.response;
 
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,21 +11,23 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "DiaryList 조회 요청")
 public class DiaryListResponseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(position = 1, required = true)
     private Long did;
 
-    @Column(length = 256)
+    @ApiModelProperty(position = 2, required = true)
     private String title;
 
-    @Column(length = 256)
+    @ApiModelProperty(position = 3, required = true)
     private String img;
 
-    @Column(columnDefinition = "TINYINT", nullable = false)
+    @ApiModelProperty(position = 4, required = true)
     private Byte bgColor;
 
-    @Column(columnDefinition = "TINYINT", nullable = false)
+    @ApiModelProperty(position = 5, required = true)
     private Byte template;
+
+    @ApiModelProperty(position = 6, required = true)
+    private String modifiedDate;
 
     public DiaryListResponseDto(Diary entity) {
         this.did = entity.getDid();
@@ -36,5 +35,6 @@ public class DiaryListResponseDto {
         this.img = entity.getImg();
         this.bgColor = entity.getBgColor();
         this.template = entity.getTemplate();
+        this.modifiedDate = entity.getModifiedDate().toString();
     }
 }
