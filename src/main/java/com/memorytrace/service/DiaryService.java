@@ -5,6 +5,7 @@ import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.repository.DiaryRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,9 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid);
+        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid).stream()
+            .map(DiaryListResponseDto::new)
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
