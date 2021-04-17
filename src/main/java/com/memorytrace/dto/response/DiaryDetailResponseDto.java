@@ -24,12 +24,9 @@ public class DiaryDetailResponseDto {
     private String content;
 
     @ApiModelProperty(position = 5, required = true)
-    private Byte alignment;
-
-    @ApiModelProperty(position = 6, required = true)
     private Byte bgColor;
 
-    @ApiModelProperty(position = 7, required = true)
+    @ApiModelProperty(position = 6, required = true)
     private Byte template;
 
     public DiaryDetailResponseDto(Diary entity) {
@@ -37,7 +34,6 @@ public class DiaryDetailResponseDto {
         this.title = entity.getTitle();
         this.img = entity.getImg();
         this.content = entity.getContent();
-        this.alignment = entity.getAlignment();
         this.bgColor = entity.getBgColor();
         this.template = entity.getTemplate();
     }
