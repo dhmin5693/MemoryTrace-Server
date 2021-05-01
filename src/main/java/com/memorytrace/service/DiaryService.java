@@ -71,6 +71,7 @@ public class DiaryService {
         Book book = Optional.of(bookRepository.findByBid(bid))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
+
         bookRepository.save(
             book.UpdateBook()
                 .bid(bid)
