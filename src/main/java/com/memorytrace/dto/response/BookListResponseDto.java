@@ -23,6 +23,9 @@ public class BookListResponseDto {
     @ApiModelProperty(position = 4, required = true)
     private Byte bgColor;
 
+    @ApiModelProperty(position = 5)
+    private String stickerImg;
+
     @ApiModelProperty(position = 5, required = true)
     private String modifiedDate;
 
@@ -31,6 +34,7 @@ public class BookListResponseDto {
         this.nickname = entity.getUser().getNickname();
         this.title = entity.getBook().getTitle();
         this.bgColor = entity.getBook().getBgColor();
+        this.stickerImg = entity.getBook().getStickerImg();
         this.modifiedDate = entity.getBook().getModifiedDate().toString();
     }
 }
