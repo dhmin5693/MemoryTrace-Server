@@ -1,11 +1,21 @@
 package com.memorytrace.service;
 
+import com.memorytrace.common.S3Uploder;
+import com.memorytrace.domain.Book;
+import com.memorytrace.domain.User;
+import com.memorytrace.domain.UserBook;
+import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
+import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
+import com.memorytrace.repository.UserBookRepository;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -13,8 +23,51 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
 
+    private final UserBookRepository userBookRepository;
+
+    private final BookRepository bookRepository;
+
+    private final S3Uploder s3Uploder;
+
     @Transactional(readOnly = true)
     public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(Long bid) {
         return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid);
+    }
+
+    @Transactional
+    public void save(DiarySaveRequestDto requestDto, MultipartFile file) throws IOException {
+        String imgUrl = s3Uploder.upload(file, "diary");
+        updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
+        diaryRepository.save(requestDto.toEntity(imgUrl));
+    }
+
+    @Transactional
+    public void updateWhoseTurnNo(Long bid, Long uid) {
+        int index = 0;
+        List<UserBook> userBookList = Optional
+            .of(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
+            .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
+
+        for (UserBook userBook : userBookList) {
+            if (userBook.getUid() == uid) {
+                index =
+                    userBook.getTurnNo() == userBookList.size() - 1 ? 0 : userBook.getTurnNo() + 1;
+                break;
+            }
+        }
+
+        Book book = Optional.of(bookRepository.findByBid(bid))
+            .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
+
+        bookRepository.save(
+            book.UpdateBook()
+                .bid(bid)
+                .user(new User(userBookList.get(index).getUid()))
+                .bgColor(book.getBgColor())
+                .stickerImg(book.getStickerImg())
+                .title(book.getTitle())
+                .isDelete(book.getIsDelete())
+                .build()
+        );
     }
 }

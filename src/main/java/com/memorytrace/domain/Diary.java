@@ -51,7 +51,7 @@ public class Diary extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Byte template;
 
-    @Builder
+    @Builder(builderClassName = "ByDiaryBuilder", builderMethodName = "ByDiaryBuilder")
     public Diary(User user, Book book, String title, String img, String content, Byte weather,
         Byte alignment, Byte bgColor, Byte template) {
         this.user = user;
@@ -63,5 +63,10 @@ public class Diary extends BaseTimeEntity {
         this.alignment = alignment;
         this.bgColor = bgColor;
         this.template = template;
+    }
+
+    @Builder(builderClassName = "ImgUrlBuilder", builderMethodName = "ImgUrlBuilder")
+    public Diary(String imgUrl) {
+        this.img = imgUrl;
     }
 }
