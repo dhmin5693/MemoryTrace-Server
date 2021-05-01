@@ -4,39 +4,41 @@ import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@ApiModel(value = "DiaryList 조회 요청")
-public class DiaryListResponseDto {
+@NoArgsConstructor
+@ApiModel(value = "Diary 조회 요청")
+public class DiaryDetailResponseDto {
 
     @ApiModelProperty(position = 1, required = true)
     private Long did;
 
     @ApiModelProperty(position = 2, required = true)
-    private Long whoseTurn;
-
-    @ApiModelProperty(position = 3, required = true)
     private String nickname;
 
-    @ApiModelProperty(position = 4, required = true)
+    @ApiModelProperty(position = 3, required = true)
     private String title;
 
-    @ApiModelProperty(position = 5, required = true)
+    @ApiModelProperty(position = 4, required = true)
     private String img;
 
+    @ApiModelProperty(position = 5, required = true)
+    private String content;
+
     @ApiModelProperty(position = 6, required = true)
-    private Byte template;
+    private Byte bgColor;
 
     @ApiModelProperty(position = 7, required = true)
-    private String modifiedDate;
+    private Byte template;
 
-    public DiaryListResponseDto(Diary entity) {
+    public DiaryDetailResponseDto(Diary entity) {
         this.did = entity.getDid();
-        this.whoseTurn = entity.getBook().getUser().getUid();
         this.nickname = entity.getUser().getNickname();
         this.title = entity.getTitle();
         this.img = entity.getImg();
+        this.content = entity.getContent();
+        this.bgColor = entity.getBgColor();
         this.template = entity.getTemplate();
-        this.modifiedDate = entity.getModifiedDate().toString();
     }
 }
