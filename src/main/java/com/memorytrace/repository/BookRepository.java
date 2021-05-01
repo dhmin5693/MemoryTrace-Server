@@ -7,4 +7,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findByInviteCode(String inviteCode);
 
+    Book findByBid(Long bid);
 }

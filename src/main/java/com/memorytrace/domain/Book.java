@@ -41,6 +41,21 @@ public class Book extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private Byte isDelete;
 
+    @Builder(builderClassName = "ByBidBuilder", builderMethodName = "ByBidBuilder")
+    public Book(Long bid) {
+        this.bid = bid;
+    }
+
+    @Builder(builderClassName = "UpdateBook", builderMethodName = "UpdateBook")
+    public Book(Long bid, User user, String title, Byte bgColor, String stickerImg, Byte isDelete) {
+        this.bid = bid;
+        this.user = user;
+        this.title = title;
+        this.bgColor = bgColor;
+        this.stickerImg = stickerImg;
+        this.isDelete = isDelete;
+    }
+
     @Builder
     public Book(User user, String title, Byte bgColor, String stickerImg, String inviteCode,
         Byte isDelete) {
