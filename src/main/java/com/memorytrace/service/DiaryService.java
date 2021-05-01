@@ -2,9 +2,11 @@ package com.memorytrace.service;
 
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
+import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
@@ -12,6 +14,7 @@ import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +34,16 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid);
+        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid).stream()
+            .map(DiaryListResponseDto::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryDetailResponseDto findByDid(Long did) {
+        Diary entity = diaryRepository.findByDid(did)
+            .orElseThrow(() -> new IllegalArgumentException(("해당 다이어리가 없습니다. did=" + did)));
+        return new DiaryDetailResponseDto(entity);
     }
 
     @Transactional
