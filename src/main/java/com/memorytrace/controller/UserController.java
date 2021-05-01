@@ -1,6 +1,7 @@
 package com.memorytrace.controller;
 
 import com.memorytrace.dto.request.UserSaveRequestDto;
+import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,8 +28,7 @@ public class UserController {
         @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
     @PostMapping
-    public ResponseEntity save(@RequestBody @Valid UserSaveRequestDto request) {
-        userService.save(request);
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<UserDetailResponseDto> save(@RequestBody @Valid UserSaveRequestDto request) {
+        return ResponseEntity.ok(userService.save(request));
     }
 }
