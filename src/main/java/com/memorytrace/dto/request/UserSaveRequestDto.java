@@ -7,8 +7,10 @@ import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @ApiModel(value = "User 생성 요청")
 public class UserSaveRequestDto {
@@ -21,21 +23,17 @@ public class UserSaveRequestDto {
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "회원 SNS KEY")
     private String snsKey;
 
-    @ApiModelProperty(position = 3, dataType = "String", value = "회원 프로필 사진")
-    private String profileImg;
-
     @Builder
-    public UserSaveRequestDto(String nickname, String snsKey, String profileImg) {
+    public UserSaveRequestDto(String nickname, String snsKey) {
         this.nickname = nickname;
         this.snsKey = snsKey;
-        this.profileImg = profileImg;
     }
 
-    public User toEntity() {
+    public User toEntity(String imgUrl) {
         return User.ByUserBuilder()
             .nickname(nickname)
             .snsKey(snsKey)
-            .profileImg(profileImg)
+            .profileImg(imgUrl)
             .build();
     }
 }
