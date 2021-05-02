@@ -1,5 +1,8 @@
 package com.memorytrace.controller;
 
+import com.memorytrace.common.ResponseMessage;
+import com.memorytrace.common.StatusCode;
+import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.InviteSaveRequestDto;
 import com.memorytrace.service.InviteService;
 import io.swagger.annotations.Api;
@@ -7,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +31,9 @@ public class InviteController {
     })
     @PostMapping
     // TODO: 토큰 방식으로 추후 수정될 수 있음
-    public ResponseEntity invite(@RequestBody InviteSaveRequestDto request) {
+    public ResponseEntity<DefaultRes> invite(@RequestBody InviteSaveRequestDto request) {
         inviteService.save(request);
-        return ResponseEntity.ok("OK");
+        return new ResponseEntity(DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_BOOK),
+            HttpStatus.CREATED);
     }
 }
