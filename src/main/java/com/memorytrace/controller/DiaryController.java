@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,9 +52,10 @@ public class DiaryController {
     @GetMapping("/list/{bid}")
     public ResponseEntity<DefaultRes> findByBook_BidOrderByModifiedDateDesc(
         @PathVariable Long bid) {
-        List<DiaryListResponseDto> list = diaryService.findByBook_BidOrderByModifiedDateDesc(bid);
+        DiaryListResponseDto diaryList = diaryService.findByBook_BidOrderByModifiedDateDesc(bid);
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, list), HttpStatus.OK);
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, diaryList),
+            HttpStatus.OK);
     }
 
     @ApiOperation(value = "Diary 조회")

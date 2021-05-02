@@ -33,10 +33,13 @@ public class DiaryService {
     private final S3Uploder s3Uploder;
 
     @Transactional(readOnly = true)
-    public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid).stream()
-            .map(DiaryListResponseDto::new)
+    public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
+        Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
+        List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
+            .findByBook_BidOrderByModifiedDateDesc(bid).stream()
+            .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
+        return new DiaryListResponseDto(whoseTurn, diaryList);
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +73,6 @@ public class DiaryService {
 
         Book book = Optional.of(bookRepository.findByBid(bid))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
-
 
         bookRepository.save(
             book.UpdateBook()
