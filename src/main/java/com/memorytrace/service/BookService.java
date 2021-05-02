@@ -4,6 +4,7 @@ import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.dto.response.BookSaveResponseDto;
 import com.memorytrace.repository.BookRepository;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +50,15 @@ public class BookService {
         }
         Collections.sort(list, (b1, b2) -> b2.getModifiedDate().compareTo(b1.getModifiedDate()));
         return list;
+    }
+
+    @Transactional(readOnly = true)
+    public BookDetailResponseDto findByBid(Long bid) {
+        Book book = bookRepository.findByBid(bid);
+        List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
+            .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
+            .map(ub -> new BookDetailResponseDto().new UsersInBook(ub))
+            .collect(Collectors.toList());
+        return new BookDetailResponseDto(book, userList);
     }
 }
