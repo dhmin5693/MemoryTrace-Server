@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,14 +46,17 @@ public class DiaryController {
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "DiaryList 조회")
+    @ApiOperation(value = "Diary List 조회")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "DiaryList 조회 성공")
+        @ApiResponse(code = 200, message = "Diary List 조회 성공")
     })
     @GetMapping("/list/{bid}")
-    public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(
+    public ResponseEntity<DefaultRes> findByBook_BidOrderByModifiedDateDesc(
         @PathVariable Long bid) {
-        return diaryService.findByBook_BidOrderByModifiedDateDesc(bid);
+        DiaryListResponseDto diaryList = diaryService.findByBook_BidOrderByModifiedDateDesc(bid);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, diaryList),
+            HttpStatus.OK);
     }
 
     @ApiOperation(value = "Diary 조회")
@@ -62,7 +64,9 @@ public class DiaryController {
         @ApiResponse(code = 200, message = "Diary 조회 성공")
     })
     @GetMapping("/{did}")
-    public DiaryDetailResponseDto findBydid(@PathVariable Long did) {
-        return diaryService.findByDid(did);
+    public ResponseEntity<DefaultRes> findBydid(@PathVariable Long did) {
+        DiaryDetailResponseDto diary = diaryService.findByDid(did);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_DETAIL, diary), HttpStatus.OK);
     }
 }
