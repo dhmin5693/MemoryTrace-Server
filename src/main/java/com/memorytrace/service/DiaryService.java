@@ -3,7 +3,6 @@ package com.memorytrace.service;
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
-import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
@@ -34,12 +33,12 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
+        Book book = bookRepository.findByBid(bid);
         List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
             .findByBook_BidOrderByModifiedDateDesc(bid).stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
-        return new DiaryListResponseDto(whoseTurn, diaryList);
+        return new DiaryListResponseDto(book, diaryList);
     }
 
     @Transactional(readOnly = true)
