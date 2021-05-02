@@ -50,11 +50,12 @@ public class BookController {
 
     @ApiOperation(value = "BookList 조회")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "BookList 조회 성공")
+        @ApiResponse(code = 200, message = "Book List 조회 성공")
     })
     @GetMapping("/list/{uid}")
-    public List<BookListResponseDto> findByUid(@PathVariable Long uid) {
+    public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid) {
         List<BookListResponseDto> list = bookService.findByUidAndIsWithdrawal(uid);
-        return list;
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, list), HttpStatus.OK);
     }
 }
