@@ -4,6 +4,7 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.service.BookService;
 import io.swagger.annotations.Api;
@@ -57,5 +58,16 @@ public class BookController {
         List<BookListResponseDto> list = bookService.findByUidAndIsWithdrawal(uid);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, list), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Book 조회")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Book 조회 성공")
+    })
+    @GetMapping("/{bid}")
+    public ResponseEntity<DefaultRes> findBybid(@PathVariable Long bid) {
+        BookDetailResponseDto book = bookService.findByBid(bid);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_DETAIL, book), HttpStatus.OK);
     }
 }
