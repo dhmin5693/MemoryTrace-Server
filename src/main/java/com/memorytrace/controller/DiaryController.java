@@ -1,5 +1,8 @@
 package com.memorytrace.controller;
 
+import com.memorytrace.common.ResponseMessage;
+import com.memorytrace.common.StatusCode;
+import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
@@ -36,11 +39,12 @@ public class DiaryController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Diary 생성 성공")
     })
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img") MultipartFile file) throws IOException {
         diaryService.save(requestDto, file);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "DiaryList 조회")
