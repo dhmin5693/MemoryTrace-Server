@@ -17,12 +17,15 @@ public class BookDetailResponseDto {
     private Long bid;
 
     @ApiModelProperty(position = 2, required = true)
-    private String inviteCode;
+    private Long whoseTurn;
 
     @ApiModelProperty(position = 3, required = true)
-    private String createdDate;
+    private String inviteCode;
 
     @ApiModelProperty(position = 4, required = true)
+    private String createdDate;
+
+    @ApiModelProperty(position = 5, required = true)
     private List<UsersInBook> userList;
 
     @Getter
@@ -41,6 +44,7 @@ public class BookDetailResponseDto {
 
     public BookDetailResponseDto(Book entity, List<UsersInBook> userList) {
         this.bid = entity.getBid();
+        this.whoseTurn = entity.getUser().getUid();
         this.inviteCode = entity.getInviteCode();
         this.createdDate = entity.getCreatedDate().toString();
         this.userList = userList;
