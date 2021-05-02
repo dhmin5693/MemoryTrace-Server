@@ -57,7 +57,7 @@ public class DiaryService {
     public void updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
-            .of(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
+            .ofNullable(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
         for (UserBook userBook : userBookList) {
@@ -68,19 +68,11 @@ public class DiaryService {
             }
         }
 
-        Book book = Optional.of(bookRepository.findByBid(bid))
+        Book book = Optional.ofNullable(bookRepository.findByBid(bid))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
-
         bookRepository.save(
-            book.UpdateBook()
-                .bid(bid)
-                .user(new User(userBookList.get(index).getUid()))
-                .bgColor(book.getBgColor())
-                .stickerImg(book.getStickerImg())
-                .title(book.getTitle())
-                .isDelete(book.getIsDelete())
-                .build()
+            book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
         );
     }
 }
