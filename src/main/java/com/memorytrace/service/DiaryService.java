@@ -33,10 +33,13 @@ public class DiaryService {
     private final S3Uploder s3Uploder;
 
     @Transactional(readOnly = true)
-    public List<DiaryListResponseDto> findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        return diaryRepository.findByBook_BidOrderByModifiedDateDesc(bid).stream()
-            .map(DiaryListResponseDto::new)
+    public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
+        Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
+        List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
+            .findByBook_BidOrderByModifiedDateDesc(bid).stream()
+            .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
+        return new DiaryListResponseDto(whoseTurn, diaryList);
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +60,7 @@ public class DiaryService {
     public void updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
-            .of(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
+            .ofNullable(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
         for (UserBook userBook : userBookList) {
@@ -68,19 +71,11 @@ public class DiaryService {
             }
         }
 
-        Book book = Optional.of(bookRepository.findByBid(bid))
+        Book book = Optional.ofNullable(bookRepository.findByBid(bid))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
-
         bookRepository.save(
-            book.UpdateBook()
-                .bid(bid)
-                .user(new User(userBookList.get(index).getUid()))
-                .bgColor(book.getBgColor())
-                .stickerImg(book.getStickerImg())
-                .title(book.getTitle())
-                .isDelete(book.getIsDelete())
-                .build()
+            book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
         );
     }
 }
