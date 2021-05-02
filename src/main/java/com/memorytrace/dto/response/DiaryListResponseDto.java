@@ -1,5 +1,6 @@
 package com.memorytrace.dto.response;
 
+import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,9 +15,12 @@ import lombok.NoArgsConstructor;
 public class DiaryListResponseDto {
 
     @ApiModelProperty(position = 1, required = true)
-    private Long whoseTurn;
+    private String title;
 
     @ApiModelProperty(position = 2, required = true)
+    private Long whoseTurn;
+
+    @ApiModelProperty(position = 3, required = true)
     private List<DiaryList> diaryList = new ArrayList<>();
 
     @Getter
@@ -39,8 +43,9 @@ public class DiaryListResponseDto {
         }
     }
 
-    public DiaryListResponseDto(Long whoseTurn, List<DiaryList> diaryList) {
-        this.whoseTurn = whoseTurn;
+    public DiaryListResponseDto(Book entity, List<DiaryList> diaryList) {
+        this.title = entity.getTitle();
+        this.whoseTurn = entity.getUser().getUid();
         this.diaryList = diaryList;
     }
 }
