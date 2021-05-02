@@ -39,28 +39,20 @@ public class Diary extends BaseTimeEntity {
     @Column(length = 2000)
     private String content;
 
-    @Column(columnDefinition = "TINYINT")
-    private Byte weather;
-
-    @Column(columnDefinition = "TINYINT")
-    private Byte alignment;
-
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Byte bgColor;
 
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Byte template;
 
-    @Builder
-    public Diary(User user, Book book, String title, String img, String content, Byte weather,
-        Byte alignment, Byte bgColor, Byte template) {
+    @Builder(builderClassName = "ByDiaryBuilder", builderMethodName = "ByDiaryBuilder")
+    public Diary(User user, Book book, String title, String img, String content, Byte bgColor,
+        Byte template) {
         this.user = user;
         this.book = book;
         this.title = title;
         this.img = img;
         this.content = content;
-        this.weather = weather;
-        this.alignment = alignment;
         this.bgColor = bgColor;
         this.template = template;
     }

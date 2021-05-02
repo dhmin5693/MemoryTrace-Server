@@ -26,7 +26,7 @@ public class BookListResponseDto {
     @ApiModelProperty(position = 5)
     private String stickerImg;
 
-    @ApiModelProperty(position = 5, required = true)
+    @ApiModelProperty(position = 6, required = true)
     private String modifiedDate;
 
     public BookListResponseDto(UserBook entity) {
