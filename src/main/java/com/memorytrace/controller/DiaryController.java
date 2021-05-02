@@ -38,11 +38,12 @@ public class DiaryController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Diary 생성 성공")
     })
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img") MultipartFile file) throws IOException {
         diaryService.save(requestDto, file);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Diary List 조회")
