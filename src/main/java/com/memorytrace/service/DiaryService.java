@@ -34,12 +34,12 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
-        Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
+        Book book = bookRepository.findByBid(bid);
         List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
             .findByBook_BidOrderByModifiedDateDesc(bid).stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
-        return new DiaryListResponseDto(whoseTurn, diaryList);
+        return new DiaryListResponseDto(book, diaryList);
     }
 
     @Transactional(readOnly = true)
