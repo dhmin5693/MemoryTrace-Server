@@ -21,8 +21,13 @@ public class PageRequestDto {
     @ApiModelProperty(position = 2, required = true, dataType = "int", value = "페이지 크기")
     private int size;
 
-    public Pageable getPageable(PageRequestDto pageRequestDto) {
+    public Pageable getPageableWithSort(PageRequestDto pageRequestDto) {
         return PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
             Sort.by("modifiedDate").descending());
+    }
+
+    public Pageable getPageableWithBookSort(PageRequestDto pageRequestDto) {
+        return PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
+            Sort.by("book.modifiedDate").descending());
     }
 }
