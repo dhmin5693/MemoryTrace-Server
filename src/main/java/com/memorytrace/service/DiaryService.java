@@ -36,13 +36,13 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
-        Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
+        Book book = bookRepository.findByBid(bid);
         Page<Diary> result = diaryRepository
             .findByBook_Bid(bid, pageRequestDto.getPageable(pageRequestDto));
         List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
-        return new DiaryListResponseDto(result, whoseTurn, diaryList);
+        return new DiaryListResponseDto(result, book, diaryList);
     }
 
     @Transactional(readOnly = true)
