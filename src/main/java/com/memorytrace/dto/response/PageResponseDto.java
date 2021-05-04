@@ -14,6 +14,6 @@ public class PageResponseDto {
     public PageResponseDto(Page response) {
         int totalPage = response.getTotalPages();
         this.curPage = response.getPageable().getPageNumber() + 1;
-        this.hasNext = !(curPage == totalPage);
+        this.hasNext = curPage != totalPage;
     }
 }
