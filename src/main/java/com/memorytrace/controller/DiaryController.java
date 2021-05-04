@@ -4,8 +4,10 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
+import com.memorytrace.dto.response.PageResponseDto;
 import com.memorytrace.service.DiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +40,7 @@ public class DiaryController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Diary 생성 성공")
     })
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img") MultipartFile file) throws IOException {
         diaryService.save(requestDto, file);
@@ -51,9 +53,9 @@ public class DiaryController {
         @ApiResponse(code = 200, message = "Diary List 조회 성공")
     })
     @GetMapping("/list/{bid}")
-    public ResponseEntity<DefaultRes> findByBook_BidOrderByModifiedDateDesc(
-        @PathVariable Long bid) {
-        DiaryListResponseDto diaryList = diaryService.findByBook_BidOrderByModifiedDateDesc(bid);
+    public ResponseEntity<DefaultRes> findByBook_Bid(
+        @PathVariable Long bid, PageRequestDto pageRequestDto) {
+        DiaryListResponseDto diaryList = diaryService.findByBook_Bid(bid, pageRequestDto);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, diaryList),
             HttpStatus.OK);

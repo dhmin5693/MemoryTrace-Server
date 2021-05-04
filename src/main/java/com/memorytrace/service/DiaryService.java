@@ -3,9 +3,9 @@ package com.memorytrace.service;
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
-import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.repository.BookRepository;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,13 +34,14 @@ public class DiaryService {
     private final S3Uploder s3Uploder;
 
     @Transactional(readOnly = true)
-    public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
+    public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
         Long whoseTurn = bookRepository.findByBid(bid).getUser().getUid();
-        List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
-            .findByBook_BidOrderByModifiedDateDesc(bid).stream()
+        Page<Diary> result = diaryRepository
+            .findByBook_Bid(bid, pageRequestDto.getPageable(pageRequestDto));
+        List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
-        return new DiaryListResponseDto(whoseTurn, diaryList);
+        return new DiaryListResponseDto(result, whoseTurn, diaryList);
     }
 
     @Transactional(readOnly = true)
