@@ -8,6 +8,7 @@ import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
+import com.memorytrace.dto.response.DiarySaveResponseDto;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
@@ -52,10 +53,12 @@ public class DiaryService {
     }
 
     @Transactional
-    public void save(DiarySaveRequestDto requestDto, MultipartFile file) throws IOException {
+    public DiarySaveResponseDto save(DiarySaveRequestDto requestDto, MultipartFile file)
+        throws IOException {
         String imgUrl = s3Uploder.upload(file, "diary");
         updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
-        diaryRepository.save(requestDto.toEntity(imgUrl));
+        Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
+        return new DiarySaveResponseDto(diary);
     }
 
     @Transactional
