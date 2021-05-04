@@ -3,6 +3,7 @@ package com.memorytrace.dto.response;
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,13 @@ import org.springframework.data.domain.Page;
 public class DiaryListResponseDto extends PageResponseDto {
 
     @ApiModelProperty(position = 1, required = true)
-    private Long whoseTurn;
+    private String title;
 
     @ApiModelProperty(position = 2, required = true)
-    private List<DiaryList> diaryList;
+    private Long whoseTurn;
+
+    @ApiModelProperty(position = 3, required = true)
+    private List<DiaryList> diaryList = new ArrayList<>();
 
     @Getter
     public class DiaryList {
