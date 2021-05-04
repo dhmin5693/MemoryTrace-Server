@@ -38,7 +38,7 @@ public class DiaryService {
     public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
         Book book = bookRepository.findByBid(bid);
         Page<Diary> result = diaryRepository
-            .findByBook_Bid(bid, pageRequestDto.getPageable(pageRequestDto));
+            .findByBook_Bid(bid, pageRequestDto.getPageableWithSort(pageRequestDto));
         List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());

@@ -4,6 +4,7 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.service.BookService;
@@ -12,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,10 +54,11 @@ public class BookController {
         @ApiResponse(code = 200, message = "Book List 조회 성공")
     })
     @GetMapping("/list/{uid}")
-    public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid) {
-        List<BookListResponseDto> list = bookService.findByUidAndIsWithdrawal(uid);
+    public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid,
+        PageRequestDto pageRequestDto) {
+        BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(uid, pageRequestDto);
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, list), HttpStatus.OK);
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, bookList), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Book 조회")
