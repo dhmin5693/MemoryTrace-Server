@@ -1,5 +1,6 @@
 package com.memorytrace.dto.response;
 
+import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,9 +44,10 @@ public class DiaryListResponseDto extends PageResponseDto {
         }
     }
 
-    public DiaryListResponseDto(Page page, Long whoseTurn, List<DiaryList> diaryList) {
+    public DiaryListResponseDto(Page page, Book book, List<DiaryList> diaryList) {
         super(page);
-        this.whoseTurn = whoseTurn;
+        this.title = book.getTitle();
+        this.whoseTurn = book.getUser().getUid();
         this.diaryList = diaryList;
     }
 }
