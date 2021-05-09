@@ -4,17 +4,17 @@ import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.dto.response.BookSaveResponseDto;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,15 +41,16 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookListResponseDto> findByUidAndIsWithdrawal(Long uid) {
-        List<UserBook> userBook = userBookRepository
-            .findByUidAndIsWithdrawal(uid, (byte) 0);
-        List<BookListResponseDto> list = new ArrayList<>();
-        for (UserBook ub : userBook) {
-            list.add(new BookListResponseDto(ub));
-        }
-        Collections.sort(list, (b1, b2) -> b2.getModifiedDate().compareTo(b1.getModifiedDate()));
-        return list;
+    public BookListResponseDto findByUidAndIsWithdrawal(Long uid, PageRequestDto pageRequestDto) {
+        Page<UserBook> userBook = userBookRepository
+            .findByUidAndIsWithdrawal(uid, (byte) 0,
+                pageRequestDto.getPageableWithBookSort(pageRequestDto));
+
+        List<BookListResponseDto.BookList> bookLists = userBook.stream()
+            .map(book -> new BookListResponseDto().new BookList(book))
+            .collect(Collectors.toList());
+
+        return new BookListResponseDto(userBook, bookLists);
     }
 
     @Transactional(readOnly = true)

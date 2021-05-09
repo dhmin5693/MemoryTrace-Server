@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor
 @ApiModel(value = "DiaryList 조회 요청")
-public class DiaryListResponseDto {
+public class DiaryListResponseDto extends PageResponseDto {
 
     @ApiModelProperty(position = 1, required = true)
     private String title;
@@ -43,9 +44,10 @@ public class DiaryListResponseDto {
         }
     }
 
-    public DiaryListResponseDto(Book entity, List<DiaryList> diaryList) {
-        this.title = entity.getTitle();
-        this.whoseTurn = entity.getUser().getUid();
+    public DiaryListResponseDto(Page page, Book book, List<DiaryList> diaryList) {
+        super(page);
+        this.title = book.getTitle();
+        this.whoseTurn = book.getUser().getUid();
         this.diaryList = diaryList;
     }
 }
