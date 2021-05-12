@@ -7,7 +7,6 @@ import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
-import com.memorytrace.dto.response.PageResponseDto;
 import com.memorytrace.service.DiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(description = "Diary 관련 API", tags = "Diary")
+@Api(description = "일기 관련 API", tags = "일기")
 @RestController
 @RequestMapping("/diary")
 @RequiredArgsConstructor
@@ -36,20 +35,21 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "Diary 생성")
+    @ApiOperation(value = "일기 작성")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Diary 생성 성공")
+        @ApiResponse(code = 201, message = "일기 작성 성공")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img") MultipartFile file) throws IOException {
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY, diaryService.save(requestDto, file)), HttpStatus.CREATED);
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
+                diaryService.save(requestDto, file)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Diary List 조회")
+    @ApiOperation(value = "교환일기장 상세(일기 리스트)")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Diary List 조회 성공")
+        @ApiResponse(code = 200, message = "교환일기장 상세(일기 리스트) 조회 성공")
     })
     @GetMapping("/list/{bid}")
     public ResponseEntity<DefaultRes> findByBook_Bid(
@@ -60,9 +60,9 @@ public class DiaryController {
             HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Diary 조회")
+    @ApiOperation(value = "일기 확인")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Diary 조회 성공")
+        @ApiResponse(code = 200, message = "일기 확인 성공")
     })
     @GetMapping("/{did}")
     public ResponseEntity<DefaultRes> findBydid(@PathVariable Long did) {
