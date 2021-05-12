@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(description = "Book 관련 API", tags = "Book")
+@Api(description = "교환 일기장 관련 API", tags = "교환 일기장")
 @RestController
 @RequestMapping("/book")
 @RequiredArgsConstructor
@@ -35,9 +35,9 @@ public class BookController {
 
     private final BookService bookService;
 
-    @ApiOperation(value = "Book 생성")
+    @ApiOperation(value = "교환 일기장 생성")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Book 생성 성공")
+        @ApiResponse(code = 201, message = "교환 일기장 생성 성공")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid BookSaveRequestDto requestDto,
@@ -49,9 +49,9 @@ public class BookController {
             HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "BookList 조회")
+    @ApiOperation(value = "교환 일기장 목록")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Book List 조회 성공")
+        @ApiResponse(code = 200, message = "교환 일기장 목록 조회 성공")
     })
     @GetMapping("/list/{uid}")
     public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid,
@@ -61,9 +61,9 @@ public class BookController {
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, bookList), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Book 조회")
+    @ApiOperation(value = "일기장 설정 페이지(일기장 상세 조회)")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Book 조회 성공")
+        @ApiResponse(code = 200, message = "일기장 설정 조회 성공")
     })
     @GetMapping("/{bid}")
     public ResponseEntity<DefaultRes> findBybid(@PathVariable Long bid) {
