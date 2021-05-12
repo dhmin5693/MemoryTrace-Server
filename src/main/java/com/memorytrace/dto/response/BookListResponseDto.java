@@ -31,7 +31,7 @@ public class BookListResponseDto {
 
     public BookListResponseDto(UserBook entity) {
         this.bid = entity.getBid();
-        this.nickname = entity.getUser().getNickname();
+        this.nickname = entity.getBook().getUser().getNickname();
         this.title = entity.getBook().getTitle();
         this.bgColor = entity.getBook().getBgColor();
         this.stickerImg = entity.getBook().getStickerImg();
