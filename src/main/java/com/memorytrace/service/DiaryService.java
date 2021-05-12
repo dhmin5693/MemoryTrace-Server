@@ -5,8 +5,10 @@ import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
+import com.memorytrace.dto.response.DiarySaveResponseDto;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,13 +35,14 @@ public class DiaryService {
     private final S3Uploder s3Uploder;
 
     @Transactional(readOnly = true)
-    public DiaryListResponseDto findByBook_BidOrderByModifiedDateDesc(Long bid) {
+    public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
         Book book = bookRepository.findByBid(bid);
-        List<DiaryListResponseDto.DiaryList> diaryList = diaryRepository
-            .findByBook_BidOrderByModifiedDateDesc(bid).stream()
+        Page<Diary> result = diaryRepository
+            .findByBook_Bid(bid, pageRequestDto.getPageableWithSort(pageRequestDto));
+        List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
             .map(d -> new DiaryListResponseDto().new DiaryList(d))
             .collect(Collectors.toList());
-        return new DiaryListResponseDto(book, diaryList);
+        return new DiaryListResponseDto(result, book, diaryList);
     }
 
     @Transactional(readOnly = true)
@@ -49,10 +53,12 @@ public class DiaryService {
     }
 
     @Transactional
-    public void save(DiarySaveRequestDto requestDto, MultipartFile file) throws IOException {
+    public DiarySaveResponseDto save(DiarySaveRequestDto requestDto, MultipartFile file)
+        throws IOException {
         String imgUrl = s3Uploder.upload(file, "diary");
         updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
-        diaryRepository.save(requestDto.toEntity(imgUrl));
+        Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
+        return new DiarySaveResponseDto(diary);
     }
 
     @Transactional
