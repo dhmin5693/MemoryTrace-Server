@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(description = "초대 관련 API", tags = "Invite")
+@Api(description = "초대 관련 API", tags = "초대")
 @RestController
 @RequestMapping("/invite")
 @RequiredArgsConstructor
