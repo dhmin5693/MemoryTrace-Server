@@ -3,7 +3,6 @@ package com.memorytrace.controller;
 import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
-import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
@@ -18,13 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(description = "User 관련 API", tags = "User")
+@Api(description = "사용자 관련 API", tags = "사용자")
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -36,10 +34,11 @@ public class UserController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity save(@ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img") MultipartFile file) throws IOException {
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, userService.save(request, file)), HttpStatus.CREATED);
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
+                userService.save(request, file)), HttpStatus.CREATED);
     }
 }
