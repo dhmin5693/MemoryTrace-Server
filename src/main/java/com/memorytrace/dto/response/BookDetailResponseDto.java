@@ -10,29 +10,34 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@ApiModel(value = "Book 조회 요청")
+@ApiModel(value = "교환 일기장 조회 응답값")
 public class BookDetailResponseDto {
 
-    @ApiModelProperty(position = 1, required = true)
+    @ApiModelProperty(position = 1, required = true, value = "교환 일기장 고유 아이디")
     private Long bid;
 
-    @ApiModelProperty(position = 2, required = true)
+    @ApiModelProperty(position = 2, required = true, value = "현재 차례의 uid")
     private Long whoseTurn;
 
-    @ApiModelProperty(position = 3, required = true)
+    @ApiModelProperty(position = 3, required = true, value = "교환 일기장 초대 코드")
     private String inviteCode;
 
-    @ApiModelProperty(position = 4, required = true)
+    @ApiModelProperty(position = 4, required = true, value = "교환 일기장 생성날짜")
     private String createdDate;
 
-    @ApiModelProperty(position = 5, required = true)
+    @ApiModelProperty(position = 5, required = true, value = "해당 교환 일기장 초대멤버 리스트")
     private List<UsersInBook> userList;
 
     @Getter
     public class UsersInBook {
 
+        @ApiModelProperty(position = 1, required = true, value = "회원 고유 아이디")
         private Long uid;
+
+        @ApiModelProperty(position = 2, required = true, value = "닉네임")
         private String nickname;
+
+        @ApiModelProperty(position = 3, required = true, value = "유저 프로필 사진")
         private String profileImg;
 
         public UsersInBook(UserBook entity) {
