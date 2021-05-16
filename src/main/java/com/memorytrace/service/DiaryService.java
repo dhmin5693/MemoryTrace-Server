@@ -55,6 +55,13 @@ public class DiaryService {
     @Transactional
     public DiarySaveResponseDto save(DiarySaveRequestDto requestDto, MultipartFile file)
         throws IOException {
+        userBookRepository
+            .findByBidAndUidAndIsWithdrawal(requestDto.getBid(), requestDto.getUid(), (byte) 0)
+            .orElseThrow(() -> new IllegalArgumentException("해당 교환일기에 참여하고 있지 않은 유저입니다. "
+                + "bid=" + requestDto.getBid() + ", uid=" + requestDto.getUid()));
+        bookRepository.findByBidAndUser_Uid(requestDto.getBid(), requestDto.getUid())
+            .orElseThrow(() -> new IllegalArgumentException(
+                "현재 교환일기 작성 차례인 유저가 아닙니다. uid=" + requestDto.getUid()));
         String imgUrl = file == null ? null : s3Uploder.upload(file, "diary");
         updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
         Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
