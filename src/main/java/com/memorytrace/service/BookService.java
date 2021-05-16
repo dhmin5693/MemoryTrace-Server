@@ -31,7 +31,7 @@ public class BookService {
     @Transactional
     public BookSaveResponseDto save(BookSaveRequestDto requestDto, MultipartFile file)
         throws IOException {
-        String imgUrl = s3Uploder.upload(file, "book");
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "book");
         try {
             Book book = bookRepository.save(requestDto.toEntity(imgUrl));
             UserBook userBook = UserBook.builder()

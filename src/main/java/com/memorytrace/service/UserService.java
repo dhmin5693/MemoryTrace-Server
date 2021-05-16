@@ -25,7 +25,7 @@ public class UserService {
     @Transactional
     public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file)
         throws IOException {
-        String imgUrl = s3Uploder.upload(file, "profile");
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "profile");
 
         try {
             User entity = userRepository.save(request.toEntity(imgUrl));

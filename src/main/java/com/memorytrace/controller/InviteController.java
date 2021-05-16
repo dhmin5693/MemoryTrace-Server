@@ -34,7 +34,7 @@ public class InviteController {
     // TODO: 토큰 방식으로 추후 수정될 수 있음
     public ResponseEntity<DefaultRes> invite(@RequestBody @Valid InviteSaveRequestDto request) {
         inviteService.save(request);
-        return new ResponseEntity(DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_BOOK),
+        return new ResponseEntity(DefaultRes.res(StatusCode.CREATED, ResponseMessage.INVITE_MEMBER),
             HttpStatus.CREATED);
     }
 }
