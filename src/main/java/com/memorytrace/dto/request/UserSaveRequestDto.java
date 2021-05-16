@@ -15,11 +15,11 @@ import lombok.Setter;
 @ApiModel(value = "User 생성 요청")
 public class UserSaveRequestDto {
 
-    @NotNull
+    @NotNull(message = "닉네임은 필수입니다.")
     @ApiModelProperty(position = 1, required = true, dataType = "String", value = "회원 닉네임")
     private String nickname;
 
-    @NotNull
+    @NotNull(message = "sns key는 필수입니다.")
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "회원 SNS KEY")
     private String snsKey;
 
