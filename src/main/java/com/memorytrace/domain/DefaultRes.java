@@ -1,5 +1,6 @@
 package com.memorytrace.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,13 @@ import lombok.Data;
 @Builder
 public class DefaultRes<T> {
 
+    @ApiModelProperty(position = 1, required = true, value = "응답 상태 코드")
     private int statusCode;
+
+    @ApiModelProperty(position = 2, required = true, value = "응답 메시지")
     private String responseMessage;
+
+    @ApiModelProperty(position = 3, required = true, value = "데이터")
     private T data;
 
     public DefaultRes(final int statusCode, final String responseMessage) {

@@ -41,7 +41,7 @@ public class BookController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid BookSaveRequestDto requestDto,
-        @RequestPart(value = "stickerImg") MultipartFile file)
+        @RequestPart(value = "stickerImg", required = false) MultipartFile file)
         throws IOException {
         return new ResponseEntity(DefaultRes
             .res(StatusCode.CREATED, ResponseMessage.CREATED_BOOK,
