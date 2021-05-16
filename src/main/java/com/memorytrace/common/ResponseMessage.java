@@ -13,5 +13,5 @@ public class ResponseMessage {
     public static final String READ_DIARY_LIST = "Diary List 조회 성공";
     public static final String READ_DIARY_DETAIL = "Diary 정보 조회 성공";
 
-    public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
+    public static final String INTERNAL_SERVER_ERROR = "서버 처리 중 오류가 발생하였습니다.";
 }
