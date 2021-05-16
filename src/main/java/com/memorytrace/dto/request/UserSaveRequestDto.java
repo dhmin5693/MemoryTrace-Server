@@ -4,7 +4,6 @@ import com.memorytrace.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,11 +22,9 @@ public class UserSaveRequestDto {
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "회원 SNS KEY")
     private String snsKey;
 
-    @Builder
-    public UserSaveRequestDto(String nickname, String snsKey) {
-        this.nickname = nickname;
-        this.snsKey = snsKey;
-    }
+    @NotNull(message = "sns type은 필수입니다.")
+    @ApiModelProperty(position = 2, required = true, dataType = "SnsType", value = "SNS TYPE : GOOGLE, KAKAO, APPLE")
+    private SnsType snsType;
 
     public User toEntity(String imgUrl) {
         return User.ByUserBuilder()
