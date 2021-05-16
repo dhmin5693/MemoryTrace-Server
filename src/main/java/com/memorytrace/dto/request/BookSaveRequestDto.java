@@ -16,15 +16,14 @@ import lombok.Setter;
 @ApiModel(value = "교환 일기장 생성 요청")
 public class BookSaveRequestDto {
 
-    @NotNull
+    @NotNull(message = "생성자 uid는 필수입니다.")
     @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "생성자 uid")
     private Long whoseTurn;
 
-    @NotNull
+    @NotNull(message = "교환 일기장 제목 필수입니다.")
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "교환 일기장 제목")
     private String title;
 
-    @NotNull
     @ApiModelProperty(position = 3, required = true, dataType = "Byte", value = "교환 일기장 배경 색상")
     private Byte bgColor;
 

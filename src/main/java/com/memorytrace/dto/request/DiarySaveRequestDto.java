@@ -16,15 +16,15 @@ import lombok.Setter;
 @ApiModel(value = "일기장 생성 요청")
 public class DiarySaveRequestDto {
 
-    @NotNull
+    @NotNull(message = "bid는 필수입니다.")
     @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "교환 일기장 고유 시퀀스 아이디")
     private Long bid;
 
-    @NotNull
+    @NotNull(message = "생성자 uid는 필수입니다.")
     @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "생성자 uid")
     private Long uid;
 
-    @NotNull
+    @NotNull(message = "일기장 제목 필수입니다.")
     @ApiModelProperty(position = 3, required = true, dataType = "String", value = "일기 제목")
     private String title;
 

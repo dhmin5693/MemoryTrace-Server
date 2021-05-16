@@ -9,6 +9,7 @@ import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.dto.response.DiarySaveResponseDto;
+import com.memorytrace.exception.InternalServerException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
@@ -36,13 +37,20 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
-        Book book = bookRepository.findByBid(bid);
-        Page<Diary> result = diaryRepository
-            .findByBook_Bid(bid, pageRequestDto.getPageableWithSort(pageRequestDto));
-        List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
-            .map(d -> new DiaryListResponseDto().new DiaryList(d))
-            .collect(Collectors.toList());
-        return new DiaryListResponseDto(result, book, diaryList);
+        try {
+            Book book = bookRepository.findByBid(bid);
+
+            Page<Diary> result = diaryRepository
+                .findByBook_Bid(bid, pageRequestDto.getPageableWithSort(pageRequestDto));
+
+            List<DiaryListResponseDto.DiaryList> diaryList = result.stream()
+                .map(d -> new DiaryListResponseDto().new DiaryList(d))
+                .collect(Collectors.toList());
+
+            return new DiaryListResponseDto(result, book, diaryList);
+        } catch (Exception e) {
+            throw new InternalServerException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -59,13 +67,20 @@ public class DiaryService {
             .findByBidAndUidAndIsWithdrawal(requestDto.getBid(), requestDto.getUid(), (byte) 0)
             .orElseThrow(() -> new IllegalArgumentException("해당 교환일기에 참여하고 있지 않은 유저입니다. "
                 + "bid=" + requestDto.getBid() + ", uid=" + requestDto.getUid()));
+
         bookRepository.findByBidAndUser_Uid(requestDto.getBid(), requestDto.getUid())
             .orElseThrow(() -> new IllegalArgumentException(
                 "현재 교환일기 작성 차례인 유저가 아닙니다. uid=" + requestDto.getUid()));
         String imgUrl = file == null ? null : s3Uploder.upload(file, "diary");
-        updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
-        Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
-        return new DiarySaveResponseDto(diary);
+        try {
+            updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
+
+            Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
+
+            return new DiarySaveResponseDto(diary);
+        } catch (Exception e) {
+            throw new InternalServerException();
+        }
     }
 
     @Transactional
@@ -75,19 +90,24 @@ public class DiaryService {
             .ofNullable(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
-        for (UserBook userBook : userBookList) {
-            if (userBook.getUid() == uid) {
-                index =
-                    userBook.getTurnNo() == userBookList.size() - 1 ? 0 : userBook.getTurnNo() + 1;
-                break;
+        try {
+            for (UserBook userBook : userBookList) {
+                if (userBook.getUid() == uid) {
+                    index =
+                        userBook.getTurnNo() == userBookList.size() - 1 ? 0
+                            : userBook.getTurnNo() + 1;
+                    break;
+                }
             }
+
+            Book book = Optional.ofNullable(bookRepository.findByBid(bid))
+                .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
+
+            bookRepository.save(
+                book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
+            );
+        } catch (Exception e) {
+            throw new InternalServerException();
         }
-
-        Book book = Optional.ofNullable(bookRepository.findByBid(bid))
-            .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
-
-        bookRepository.save(
-            book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
-        );
     }
 }
