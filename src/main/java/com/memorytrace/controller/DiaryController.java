@@ -41,7 +41,7 @@ public class DiaryController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
-        @RequestPart(value = "img") MultipartFile file) throws IOException {
+        @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
                 diaryService.save(requestDto, file)), HttpStatus.CREATED);

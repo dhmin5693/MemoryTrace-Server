@@ -26,10 +26,7 @@ public class DiaryDetailResponseDto {
     @ApiModelProperty(position = 5, required = true, value = "일기 내용")
     private String content;
 
-    @ApiModelProperty(position = 6, required = true, value = "일기 배경 색상")
-    private Byte bgColor;
-
-    @ApiModelProperty(position = 7, required = true, value = "일기 속지 템플릿(default = 0)")
+    @ApiModelProperty(position = 6, required = true, value = "일기 속지 템플릿(default = 0)")
     private Byte template;
 
     public DiaryDetailResponseDto(Diary entity) {
@@ -38,7 +35,6 @@ public class DiaryDetailResponseDto {
         this.title = entity.getTitle();
         this.img = entity.getImg();
         this.content = entity.getContent();
-        this.bgColor = entity.getBgColor();
         this.template = entity.getTemplate();
     }
 }
