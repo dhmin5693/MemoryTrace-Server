@@ -55,7 +55,7 @@ public class DiaryService {
     @Transactional
     public DiarySaveResponseDto save(DiarySaveRequestDto requestDto, MultipartFile file)
         throws IOException {
-        String imgUrl = s3Uploder.upload(file, "diary");
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "diary");
         updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
         Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
         return new DiarySaveResponseDto(diary);
