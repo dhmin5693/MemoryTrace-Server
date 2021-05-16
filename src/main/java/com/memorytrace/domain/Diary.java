@@ -42,18 +42,16 @@ public class Diary extends BaseTimeEntity {
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Byte bgColor;
 
-    @Column(columnDefinition = "TINYINT", nullable = false)
+    @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private Byte template;
 
     @Builder(builderClassName = "ByDiaryBuilder", builderMethodName = "ByDiaryBuilder")
-    public Diary(User user, Book book, String title, String img, String content, Byte bgColor,
-        Byte template) {
+    public Diary(User user, Book book, String title, String img, String content, Byte bgColor) {
         this.user = user;
         this.book = book;
         this.title = title;
         this.img = img;
         this.content = content;
         this.bgColor = bgColor;
-        this.template = template;
     }
 }
