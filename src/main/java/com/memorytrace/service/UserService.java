@@ -22,8 +22,9 @@ public class UserService {
     private final S3Uploder s3Uploder;
 
     @Transactional
-    public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file) throws IOException {
-        String imgUrl = s3Uploder.upload(file, "profile");
+    public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file)
+        throws IOException {
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "profile");
         User entity = userRepository.save(request.toEntity(imgUrl));
         return new UserDetailResponseDto(entity);
     }

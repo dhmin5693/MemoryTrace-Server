@@ -36,7 +36,7 @@ public class UserController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity save(@ModelAttribute @Valid UserSaveRequestDto request,
-        @RequestPart(value = "img") MultipartFile file) throws IOException {
+        @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
                 userService.save(request, file)), HttpStatus.CREATED);
