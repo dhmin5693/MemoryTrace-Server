@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class InviteController {
     })
     @PostMapping
     // TODO: 토큰 방식으로 추후 수정될 수 있음
-    public ResponseEntity<DefaultRes> invite(@RequestBody InviteSaveRequestDto request) {
+    public ResponseEntity<DefaultRes> invite(@RequestBody @Valid InviteSaveRequestDto request) {
         inviteService.save(request);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_BOOK),
             HttpStatus.CREATED);

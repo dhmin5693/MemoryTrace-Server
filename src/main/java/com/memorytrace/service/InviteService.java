@@ -3,6 +3,7 @@ package com.memorytrace.service;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.InviteSaveRequestDto;
+import com.memorytrace.exception.InternalServerException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import com.memorytrace.repository.UserRepository;
@@ -22,32 +23,29 @@ public class InviteService {
 
     @Transactional
     public void save(InviteSaveRequestDto request) {
-        findbyUid(request.getUid());
+        Optional.ofNullable(userRepository.findByUid(request.getUid()))
+            .orElseThrow(() -> new IllegalArgumentException(
+                "유효하지 않는 사용자 입니다. uid = " + request.getUid()));
 
-        Long bid = findByInviteCode(request.getInviteCode()).getBid();
-        List<UserBook> userBook = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
-
-        final int nowTurn = userBook.size();
-
-        userBookRepository.save(UserBook.builder()
-            .bid(bid)
-            .uid(request.getUid())
-            .isWithdrawal((byte) 0)
-            .turnNo(nowTurn)
-            .build());
-    }
-
-    @Transactional(readOnly = true)
-    public Book findByInviteCode(String inviteCode) {
-        return Optional.ofNullable(bookRepository.findByInviteCode(inviteCode))
+        Book book = Optional.ofNullable(bookRepository.findByInviteCode(request.getInviteCode()))
             .orElseThrow(() -> new IllegalArgumentException(
                 "유효하지 않는 초대코드 입니다. 다시 시도해주세요."));
-    }
 
-    @Transactional(readOnly = true)
-    public void findbyUid(Long uid) {
-        Optional.ofNullable(userRepository.findByUid(uid))
-            .orElseThrow(() -> new IllegalArgumentException(
-                "유효하지 않는 사용자 입니다. uid = " + uid));
+        Long bid = book.getBid();
+
+        try {
+            List<UserBook> userBook = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
+
+            final int nowTurn = userBook.size();
+
+            userBookRepository.save(UserBook.builder()
+                .bid(bid)
+                .uid(request.getUid())
+                .isWithdrawal((byte) 0)
+                .turnNo(nowTurn)
+                .build());
+        } catch (Exception e) {
+            throw new InternalServerException();
+        }
     }
 }
