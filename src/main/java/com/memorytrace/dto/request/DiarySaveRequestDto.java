@@ -31,10 +31,6 @@ public class DiarySaveRequestDto {
     @ApiModelProperty(position = 4, dataType = "String", value = "일기 내용")
     private String content;
 
-    @NotNull
-    @ApiModelProperty(position = 5, required = true, dataType = "Byte", value = "배경 색상")
-    private Byte bgColor;
-
     public Diary toEntity(String imgUrl) {
         return Diary.ByDiaryBuilder()
             .title(title)
@@ -42,7 +38,6 @@ public class DiarySaveRequestDto {
             .user(new User(uid))
             .img(imgUrl)
             .content(content)
-            .bgColor(bgColor)
             .build();
     }
 
