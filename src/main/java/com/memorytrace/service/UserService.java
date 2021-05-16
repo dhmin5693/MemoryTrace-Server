@@ -4,6 +4,7 @@ import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.User;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
+import com.memorytrace.exception.InternalServerException;
 import com.memorytrace.repository.UserRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,16 @@ public class UserService {
     private final S3Uploder s3Uploder;
 
     @Transactional
-    public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file) throws IOException {
-        String imgUrl = s3Uploder.upload(file, "profile");
-        User entity = userRepository.save(request.toEntity(imgUrl));
-        return new UserDetailResponseDto(entity);
+    public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file)
+        throws IOException {
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "profile");
+
+        try {
+            User entity = userRepository.save(request.toEntity(imgUrl));
+
+            return new UserDetailResponseDto(entity);
+        } catch (Exception e) {
+            throw new InternalServerException();
+        }
     }
 }
