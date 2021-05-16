@@ -13,19 +13,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@ApiModel(value = "Book 생성 요청")
+@ApiModel(value = "교환 일기장 생성 요청")
 public class BookSaveRequestDto {
 
     @NotNull
-    @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "현재 차례인 uid (생성자 uid)")
+    @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "생성자 uid")
     private Long whoseTurn;
 
     @NotNull
-    @ApiModelProperty(position = 2, required = true, dataType = "String", value = "Book 제목")
+    @ApiModelProperty(position = 2, required = true, dataType = "String", value = "교환 일기장 제목")
     private String title;
 
     @NotNull
-    @ApiModelProperty(position = 3, required = true, dataType = "Byte", value = "Book 배경 색상")
+    @ApiModelProperty(position = 3, required = true, dataType = "Byte", value = "교환 일기장 배경 색상")
     private Byte bgColor;
 
     public Book toEntity(String imgUrl) {

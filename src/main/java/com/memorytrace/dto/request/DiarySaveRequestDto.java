@@ -13,30 +13,30 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@ApiModel(value = "Diary 생성 요청")
+@ApiModel(value = "일기장 생성 요청")
 public class DiarySaveRequestDto {
 
     @NotNull
-    @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "다이어리 북 아이디")
+    @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "교환 일기장 고유 시퀀스 아이디")
     private Long bid;
 
     @NotNull
-    @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "사용자 아이디 고유번호")
+    @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "생성자 uid")
     private Long uid;
 
     @NotNull
-    @ApiModelProperty(position = 3, required = true, dataType = "String", value = "다이어리 제목")
+    @ApiModelProperty(position = 3, required = true, dataType = "String", value = "일기 제목")
     private String title;
 
-    @ApiModelProperty(position = 5, dataType = "String", value = "다이어리 내용")
+    @ApiModelProperty(position = 4, dataType = "String", value = "일기 내용")
     private String content;
 
     @NotNull
-    @ApiModelProperty(position = 8, required = true, dataType = "Byte", value = "배경색상")
+    @ApiModelProperty(position = 5, required = true, dataType = "Byte", value = "배경 색상")
     private Byte bgColor;
 
     @NotNull
-    @ApiModelProperty(position = 9, required = true, dataType = "Byte", value = "속지 템플릿(default = 0)")
+    @ApiModelProperty(position = 6, required = true, dataType = "Byte", value = "속지 템플릿(default = 0)")
     private Byte template;
 
     public Diary toEntity(String imgUrl) {
