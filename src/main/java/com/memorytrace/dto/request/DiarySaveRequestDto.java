@@ -20,8 +20,7 @@ public class DiarySaveRequestDto {
     @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "교환 일기장 고유 시퀀스 아이디")
     private Long bid;
 
-    @NotNull(message = "생성자 uid는 필수입니다.")
-    @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "생성자 uid")
+    @ApiModelProperty(position = 2, dataType = "Long", value = "생성자 uid", hidden = true)
     private Long uid;
 
     @NotNull(message = "일기장 제목 필수입니다.")
