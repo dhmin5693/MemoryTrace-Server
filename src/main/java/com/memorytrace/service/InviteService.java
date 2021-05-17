@@ -3,17 +3,19 @@ package com.memorytrace.service;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.InviteSaveRequestDto;
-import com.memorytrace.exception.InternalServerException;
+import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import com.memorytrace.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class InviteService {
 
@@ -45,7 +47,8 @@ public class InviteService {
                 .turnNo(nowTurn)
                 .build());
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("초대한 멤버 저장 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 }

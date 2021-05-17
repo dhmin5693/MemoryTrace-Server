@@ -4,7 +4,7 @@ import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.User;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
-import com.memorytrace.exception.InternalServerException;
+import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.UserRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,8 @@ public class UserService {
 
             return new UserDetailResponseDto(entity);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("유저 저장 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 }

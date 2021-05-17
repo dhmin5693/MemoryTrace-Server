@@ -8,19 +8,21 @@ import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.dto.response.BookSaveResponseDto;
-import com.memorytrace.exception.InternalServerException;
+import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookService {
 
@@ -42,7 +44,8 @@ public class BookService {
 
             return new BookSaveResponseDto(book);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("교환일기 저장 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 
@@ -59,7 +62,8 @@ public class BookService {
 
             return new BookListResponseDto(userBook, bookLists);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("교환일기 조회 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 
@@ -75,7 +79,8 @@ public class BookService {
 
             return new BookDetailResponseDto(book, userList);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("교환일기 조회 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 }
