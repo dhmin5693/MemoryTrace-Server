@@ -41,7 +41,6 @@ public class UserService {
         String imgUrl = file == null ? null : s3Uploder.upload(file, "profile");
 
         try {
-            request.setSnsKey(request.getSnsType() + "_" + request.getSnsKey());
             User entity = userRepository.save(request.toEntity(imgUrl));
             String jwt = jwtTokenProvider.createToken(request.getSnsKey());
             return new UserDetailResponseDto(entity, jwt);
