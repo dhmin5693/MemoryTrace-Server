@@ -4,6 +4,7 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.UserSaveRequestDto;
+import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +38,7 @@ public class UserController {
         @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@ModelAttribute @Valid UserSaveRequestDto request,
+    public ResponseEntity<DefaultRes<UserDetailResponseDto>> save(@ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
