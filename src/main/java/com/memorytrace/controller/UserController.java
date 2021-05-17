@@ -4,6 +4,7 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.UserSaveRequestDto;
+import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,12 @@ public class UserController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity save(@ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
+        UserDetailResponseDto existingUser = userService.getExistingUser(request);
+        if (existingUser != null) {
+            return new ResponseEntity(
+                DefaultRes.res(StatusCode.OK, ResponseMessage.EXISTING_USER, existingUser),
+                HttpStatus.OK);
+        }
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
                 userService.save(request, file)), HttpStatus.CREATED);
