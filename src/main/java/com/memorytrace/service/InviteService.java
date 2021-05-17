@@ -1,6 +1,7 @@
 package com.memorytrace.service;
 
 import com.memorytrace.domain.Book;
+import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.InviteSaveRequestDto;
 import com.memorytrace.exception.MemoryTraceException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +27,12 @@ public class InviteService {
 
     @Transactional
     public void save(InviteSaveRequestDto request) {
-        Optional.ofNullable(userRepository.findByUid(request.getUid()))
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+
+        userRepository.findByUid(uid)
             .orElseThrow(() -> new IllegalArgumentException(
-                "유효하지 않는 사용자 입니다. uid = " + request.getUid()));
+                "유효하지 않는 사용자 입니다. uid = " + uid));
 
         Book book = Optional.ofNullable(bookRepository.findByInviteCode(request.getInviteCode()))
             .orElseThrow(() -> new IllegalArgumentException(
@@ -42,7 +47,7 @@ public class InviteService {
 
             userBookRepository.save(UserBook.builder()
                 .bid(bid)
-                .uid(request.getUid())
+                .uid(uid)
                 .isWithdrawal((byte) 0)
                 .turnNo(nowTurn)
                 .build());

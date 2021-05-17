@@ -17,13 +17,8 @@ public class InviteSaveRequestDto {
     @ApiModelProperty(position = 1, required = true, dataType = "String", value = "초대 코드")
     private String inviteCode;
 
-    @NotBlank(message = "초대할 유저 id는 필수입니다.")
-    @ApiModelProperty(position = 2, required = true, dataType = "Long", value = "초대될 아이디")
-    private Long uid;
-
     @Builder
-    public InviteSaveRequestDto(String inviteCode, Long uid) {
+    public InviteSaveRequestDto(String inviteCode) {
         this.inviteCode = inviteCode;
-        this.uid = uid;
     }
 }
