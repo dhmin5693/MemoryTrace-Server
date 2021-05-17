@@ -24,6 +24,17 @@ public class UserService {
 
     private final S3Uploder s3Uploder;
 
+    @Transactional(readOnly = true)
+    public UserDetailResponseDto getExistingUser(UserSaveRequestDto request) {
+        request.setSnsKey(request.getSnsType() + "_" + request.getSnsKey());
+        User user = userRepository.findBySnsKey(request.getSnsKey()).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        String jwt = jwtTokenProvider.createToken(request.getSnsKey());
+        return new UserDetailResponseDto(user, jwt);
+    }
+
     @Transactional
     public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file)
         throws IOException {
