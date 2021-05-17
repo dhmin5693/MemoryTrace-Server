@@ -7,6 +7,7 @@ import com.memorytrace.dto.request.BookSaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
+import com.memorytrace.dto.response.BookSaveResponseDto;
 import com.memorytrace.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class BookController {
         @ApiResponse(code = 201, message = "교환 일기장 생성 성공")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid BookSaveRequestDto requestDto,
+    public ResponseEntity<DefaultRes<BookSaveResponseDto>> save(@ModelAttribute @Valid BookSaveRequestDto requestDto,
         @RequestPart(value = "stickerImg", required = false) MultipartFile file)
         throws IOException {
         return new ResponseEntity(DefaultRes
@@ -53,10 +54,9 @@ public class BookController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "교환 일기장 목록 조회 성공")
     })
-    @GetMapping("/list/{uid}")
-    public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid,
-        PageRequestDto pageRequestDto) {
-        BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(uid, pageRequestDto);
+    @GetMapping("/list")
+    public ResponseEntity<DefaultRes<BookListResponseDto>> findByUid(PageRequestDto pageRequestDto) {
+        BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(pageRequestDto);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, bookList), HttpStatus.OK);
     }
@@ -66,7 +66,7 @@ public class BookController {
         @ApiResponse(code = 200, message = "일기장 설정 조회 성공")
     })
     @GetMapping("/{bid}")
-    public ResponseEntity<DefaultRes> findBybid(@PathVariable Long bid) {
+    public ResponseEntity<DefaultRes<BookDetailResponseDto>> findBybid(@PathVariable Long bid) {
         BookDetailResponseDto book = bookService.findByBid(bid);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_DETAIL, book), HttpStatus.OK);
