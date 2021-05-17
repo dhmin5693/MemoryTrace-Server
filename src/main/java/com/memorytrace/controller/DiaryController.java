@@ -7,6 +7,7 @@ import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
+import com.memorytrace.dto.response.DiarySaveResponseDto;
 import com.memorytrace.service.DiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class DiaryController {
         @ApiResponse(code = 201, message = "일기 작성 성공")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<DefaultRes> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
+    public ResponseEntity<DefaultRes<DiarySaveResponseDto>> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
@@ -52,7 +53,7 @@ public class DiaryController {
         @ApiResponse(code = 200, message = "교환일기장 상세(일기 리스트) 조회 성공")
     })
     @GetMapping("/list/{bid}")
-    public ResponseEntity<DefaultRes> findByBook_Bid(
+    public ResponseEntity<DefaultRes<DiaryListResponseDto>> findByBook_Bid(
         @PathVariable Long bid, PageRequestDto pageRequestDto) {
         DiaryListResponseDto diaryList = diaryService.findByBook_Bid(bid, pageRequestDto);
         return new ResponseEntity(
@@ -65,7 +66,7 @@ public class DiaryController {
         @ApiResponse(code = 200, message = "일기 확인 성공")
     })
     @GetMapping("/{did}")
-    public ResponseEntity<DefaultRes> findBydid(@PathVariable Long did) {
+    public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> findBydid(@PathVariable Long did) {
         DiaryDetailResponseDto diary = diaryService.findByDid(did);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_DETAIL, diary), HttpStatus.OK);
