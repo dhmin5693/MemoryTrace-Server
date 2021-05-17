@@ -52,7 +52,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public BookListResponseDto findByUidAndIsWithdrawal(Long uid, PageRequestDto pageRequestDto) {
+    public BookListResponseDto findByUidAndIsWithdrawal(PageRequestDto pageRequestDto) {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
         Page<UserBook> userBook = userBookRepository
             .findByUidAndIsWithdrawal(uid, (byte) 0,
                 pageRequestDto.getPageableWithBookSort(pageRequestDto));
