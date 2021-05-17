@@ -3,6 +3,7 @@ package com.memorytrace.service;
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
+import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +68,8 @@ public class DiaryService {
     @Transactional
     public DiarySaveResponseDto save(DiarySaveRequestDto requestDto, MultipartFile file)
         throws IOException {
+        requestDto.setUid(((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid());
         userBookRepository
             .findByBidAndUidAndIsWithdrawal(requestDto.getBid(), requestDto.getUid(), (byte) 0)
             .orElseThrow(() -> new IllegalArgumentException("해당 교환일기에 참여하고 있지 않은 유저입니다. "

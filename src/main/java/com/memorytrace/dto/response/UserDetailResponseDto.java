@@ -18,10 +18,14 @@ public class UserDetailResponseDto {
     @ApiModelProperty(position = 3, required = true, value = "사용자 프로필 사진")
     private String profileImg;
 
-    public UserDetailResponseDto(User entity) {
+    @ApiModelProperty(position = 4, required = true, value = "jwt")
+    private String jwt;
+
+    public UserDetailResponseDto(User entity, String jwt) {
         this.uid = entity.getUid();
         this.nickName = entity.getNickname();
         this.profileImg = entity.getProfileImg();
+        this.jwt = jwt;
     }
 
 }

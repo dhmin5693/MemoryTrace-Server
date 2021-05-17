@@ -2,6 +2,7 @@ package com.memorytrace.service;
 
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.Book;
+import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.BookSaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +35,9 @@ public class BookService {
     @Transactional
     public BookSaveResponseDto save(BookSaveRequestDto requestDto, MultipartFile file)
         throws IOException {
+        requestDto.setWhoseTurn(((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid());
+
         String imgUrl = file == null ? null : s3Uploder.upload(file, "book");
         try {
             Book book = bookRepository.save(requestDto.toEntity(imgUrl));
@@ -50,7 +55,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public BookListResponseDto findByUidAndIsWithdrawal(Long uid, PageRequestDto pageRequestDto) {
+    public BookListResponseDto findByUidAndIsWithdrawal(PageRequestDto pageRequestDto) {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
         Page<UserBook> userBook = userBookRepository
             .findByUidAndIsWithdrawal(uid, (byte) 0,
                 pageRequestDto.getPageableWithBookSort(pageRequestDto));
