@@ -53,10 +53,9 @@ public class BookController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "교환 일기장 목록 조회 성공")
     })
-    @GetMapping("/list/{uid}")
-    public ResponseEntity<DefaultRes> findByUid(@PathVariable Long uid,
-        PageRequestDto pageRequestDto) {
-        BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(uid, pageRequestDto);
+    @GetMapping("/list")
+    public ResponseEntity<DefaultRes> findByUid(PageRequestDto pageRequestDto) {
+        BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(pageRequestDto);
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, bookList), HttpStatus.OK);
     }
