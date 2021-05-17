@@ -38,7 +38,7 @@ public class UserController {
         @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@ModelAttribute @Valid UserSaveRequestDto request,
+    public ResponseEntity<DefaultRes<UserDetailResponseDto>> save(@ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         UserDetailResponseDto existingUser = userService.getExistingUser(request);
         if (existingUser != null) {
