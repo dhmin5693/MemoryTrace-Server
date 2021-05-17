@@ -9,7 +9,7 @@ import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.dto.response.DiarySaveResponseDto;
-import com.memorytrace.exception.InternalServerException;
+import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
@@ -18,12 +18,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class DiaryService {
 
@@ -49,7 +51,8 @@ public class DiaryService {
 
             return new DiaryListResponseDto(result, book, diaryList);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("교환일기 조회 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 
@@ -79,7 +82,8 @@ public class DiaryService {
 
             return new DiarySaveResponseDto(diary);
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("교환일기 저장 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 
@@ -107,7 +111,8 @@ public class DiaryService {
                 book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
             );
         } catch (Exception e) {
-            throw new InternalServerException();
+            log.error("Whose Turn 수정 중 에러 발생", e);
+            throw new MemoryTraceException();
         }
     }
 }

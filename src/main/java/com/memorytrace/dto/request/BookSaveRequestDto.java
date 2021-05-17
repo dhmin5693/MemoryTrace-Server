@@ -5,6 +5,7 @@ import com.memorytrace.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.UUID;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @ApiModel(value = "교환 일기장 생성 요청")
 public class BookSaveRequestDto {
 
-    @NotNull(message = "생성자 uid는 필수입니다.")
+    @NotBlank(message = "생성자 uid는 필수입니다.")
     @ApiModelProperty(position = 1, required = true, dataType = "Long", value = "생성자 uid")
     private Long whoseTurn;
 
