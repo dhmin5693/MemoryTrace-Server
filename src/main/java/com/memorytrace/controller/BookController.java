@@ -44,7 +44,7 @@ public class BookController {
     public ResponseEntity<DefaultRes<BookSaveResponseDto>> save(@ModelAttribute @Valid BookSaveRequestDto requestDto,
         @RequestPart(value = "stickerImg", required = false) MultipartFile file)
         throws IOException {
-        return new ResponseEntity(DefaultRes
+        return new ResponseEntity<>(DefaultRes
             .res(StatusCode.CREATED, ResponseMessage.CREATED_BOOK,
                 bookService.save(requestDto, file)),
             HttpStatus.CREATED);
@@ -57,7 +57,7 @@ public class BookController {
     @GetMapping("/list")
     public ResponseEntity<DefaultRes<BookListResponseDto>> findByUid(PageRequestDto pageRequestDto) {
         BookListResponseDto bookList = bookService.findByUidAndIsWithdrawal(pageRequestDto);
-        return new ResponseEntity(
+        return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_LIST, bookList), HttpStatus.OK);
     }
 
@@ -68,7 +68,7 @@ public class BookController {
     @GetMapping("/{bid}")
     public ResponseEntity<DefaultRes<BookDetailResponseDto>> findBybid(@PathVariable Long bid) {
         BookDetailResponseDto book = bookService.findByBid(bid);
-        return new ResponseEntity(
+        return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_DETAIL, book), HttpStatus.OK);
     }
 }
