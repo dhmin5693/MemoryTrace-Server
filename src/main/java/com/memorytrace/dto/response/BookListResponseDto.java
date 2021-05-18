@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
 public class BookListResponseDto extends PageResponseDto {
 
     @ApiModelProperty(position = 1, required = true, value = "교환 일기장 리스트")
-    private List<BookList> bookList = new ArrayList<>();
+    private List<BookList> bookList;
 
     @Getter
     public class BookList {
