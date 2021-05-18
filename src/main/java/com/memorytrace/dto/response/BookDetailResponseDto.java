@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@ApiModel(value = "교환 일기장 조회 응답값")
+@ApiModel(value = "일기장 설정 페이지 응답값(일기장 상세 조회)")
 public class BookDetailResponseDto {
 
     @ApiModelProperty(position = 1, required = true, value = "교환 일기장 고유 아이디")
