@@ -40,6 +40,12 @@ public class UserController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes<UserDetailResponseDto>> save(@ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
+        UserDetailResponseDto existingUser = userService.getExistingUser(request);
+        if (existingUser != null) {
+            return new ResponseEntity<>(
+                DefaultRes.res(StatusCode.OK, ResponseMessage.EXISTING_USER, existingUser),
+                HttpStatus.OK);
+        }
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
                 userService.save(request, file)), HttpStatus.CREATED);
@@ -47,7 +53,7 @@ public class UserController {
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
     @GetMapping("/jwt/{uid}")
-    public ResponseEntity getToken(@PathVariable Long uid) {
+    public ResponseEntity<String> getToken(@PathVariable Long uid) {
         String jwt = userService.getToken(uid);
         return ResponseEntity.ok().body(jwt);
     }
