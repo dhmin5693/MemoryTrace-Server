@@ -4,7 +4,6 @@ import com.memorytrace.domain.Book;
 import com.memorytrace.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
