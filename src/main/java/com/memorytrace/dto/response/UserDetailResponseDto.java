@@ -13,7 +13,7 @@ public class UserDetailResponseDto {
     private Long uid;
 
     @ApiModelProperty(position = 2, required = true, value = "사용자 닉네임")
-    private String nickName;
+    private String nickname;
 
     @ApiModelProperty(position = 3, required = true, value = "가입 SNS")
     private String snsType;
@@ -29,7 +29,7 @@ public class UserDetailResponseDto {
 
     public UserDetailResponseDto(User entity, String jwt) {
         this.uid = entity.getUid();
-        this.nickName = entity.getNickname();
+        this.nickname = entity.getNickname();
         this.snsType = entity.getSnsKey().split("_")[0];
         this.profileImg = entity.getProfileImg();
         this.createdDate = entity.getCreatedDate().toString();

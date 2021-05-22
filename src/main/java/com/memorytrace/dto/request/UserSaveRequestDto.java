@@ -27,13 +27,13 @@ public class UserSaveRequestDto {
     @ApiModelProperty(position = 2, required = true, dataType = "SnsType", allowableValues = "GOOGLE, KAKAO, APPLE", value = "SNS TYPE : GOOGLE, KAKAO, APPLE")
     private SnsType snsType;
 
-    private String img;
+    private String profileImg;
 
     public User toEntity() {
         return User.ByUserBuilder()
             .nickname(nickname)
             .snsKey(snsKey)
-            .profileImg(img)
+            .profileImg(profileImg)
             .build();
     }
 }
