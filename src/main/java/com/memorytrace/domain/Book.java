@@ -1,5 +1,6 @@
 package com.memorytrace.domain;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,10 +12,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @NoArgsConstructor
 @Entity
+//@Builder
 @DynamicInsert
 public class Book extends BaseTimeEntity {
 
@@ -49,6 +52,18 @@ public class Book extends BaseTimeEntity {
     @Builder
     public Book(User user, String title, Byte bgColor, String stickerImg, String inviteCode,
         Byte isDelete) {
+        this.user = user;
+        this.title = title;
+        this.bgColor = bgColor;
+        this.stickerImg = stickerImg;
+        this.inviteCode = inviteCode;
+        this.isDelete = isDelete;
+    }
+
+    @Builder(builderClassName = "UpdateBuilder", builderMethodName = "UpdateBuilder")
+    public Book(Long bid, User user, String title, Byte bgColor, String stickerImg, String inviteCode,
+        Byte isDelete) {
+        this.bid = bid;
         this.user = user;
         this.title = title;
         this.bgColor = bgColor;

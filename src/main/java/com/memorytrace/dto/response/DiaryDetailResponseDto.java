@@ -1,8 +1,10 @@
 package com.memorytrace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +31,10 @@ public class DiaryDetailResponseDto {
     @ApiModelProperty(position = 6, required = true, value = "일기 속지 템플릿(default = 0)")
     private Byte template;
 
+    @ApiModelProperty(position = 7, required = true, value = "작성 시간")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    private LocalDateTime createdDate;
+
     public DiaryDetailResponseDto(Diary entity) {
         this.did = entity.getDid();
         this.nickname = entity.getUser().getNickname();
@@ -36,5 +42,6 @@ public class DiaryDetailResponseDto {
         this.img = entity.getImg();
         this.content = entity.getContent();
         this.template = entity.getTemplate();
+        this.createdDate = entity.getCreatedDate();
     }
 }
