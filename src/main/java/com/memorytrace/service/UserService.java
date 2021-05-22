@@ -36,14 +36,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserDetailResponseDto save(UserSaveRequestDto request, MultipartFile file)
-        throws IOException {
-        String imgUrl = file == null ? null : s3Uploder.upload(file, "profile");
-
+    public UserDetailResponseDto save(UserSaveRequestDto request) {
         try {
-            User entity = userRepository.save(request.toEntity(imgUrl));
             String jwt = jwtTokenProvider.createToken(request.getSnsKey());
-            return new UserDetailResponseDto(entity, jwt);
+            return new UserDetailResponseDto(userRepository.save(request.toEntity()), jwt);
         } catch (Exception e) {
             log.error("유저 저장 중 에러발생", e);
             throw new MemoryTraceException();
