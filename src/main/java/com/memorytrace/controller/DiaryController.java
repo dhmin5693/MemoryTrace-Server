@@ -43,7 +43,7 @@ public class DiaryController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes<DiarySaveResponseDto>> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
-        return new ResponseEntity(
+        return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
                 diaryService.save(requestDto, file)), HttpStatus.CREATED);
     }
@@ -56,7 +56,7 @@ public class DiaryController {
     public ResponseEntity<DefaultRes<DiaryListResponseDto>> findByBook_Bid(
         @PathVariable Long bid, PageRequestDto pageRequestDto) {
         DiaryListResponseDto diaryList = diaryService.findByBook_Bid(bid, pageRequestDto);
-        return new ResponseEntity(
+        return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, diaryList),
             HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class DiaryController {
     @GetMapping("/{did}")
     public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> findBydid(@PathVariable Long did) {
         DiaryDetailResponseDto diary = diaryService.findByDid(did);
-        return new ResponseEntity(
+        return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_DETAIL, diary), HttpStatus.OK);
     }
 }
