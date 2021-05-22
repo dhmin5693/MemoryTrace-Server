@@ -4,6 +4,7 @@ import com.memorytrace.auth.JwtAuthenticationFilter;
 import com.memorytrace.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,7 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/user/**")
+            .antMatchers(HttpMethod.POST, "/user")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/user/jwt/**")
             .permitAll()
             .antMatchers("/v2/api-docs",
                 "/configuration/ui",

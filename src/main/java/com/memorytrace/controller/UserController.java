@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +40,8 @@ public class UserController {
         @ApiResponse(code = 201, message = "사용자 생성 완료")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<DefaultRes<UserDetailResponseDto>> save(@ModelAttribute @Valid UserSaveRequestDto request,
+    public ResponseEntity<DefaultRes<UserDetailResponseDto>> save(
+        @ModelAttribute @Valid UserSaveRequestDto request,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         UserDetailResponseDto existingUser = userService.getExistingUser(request);
         if (existingUser != null) {
@@ -49,6 +52,18 @@ public class UserController {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
                 userService.save(request, file)), HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "사용자 정보 조회")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "사용자 정보 조회 완료")
+    })
+    @GetMapping
+    public ResponseEntity<DefaultRes<UserDetailResponseDto>> findById(
+        @RequestHeader HttpHeaders headers) {
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_DETAIL,
+                userService.findById(headers)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
