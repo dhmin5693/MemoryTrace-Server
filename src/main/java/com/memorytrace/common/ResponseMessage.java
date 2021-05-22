@@ -5,6 +5,7 @@ public class ResponseMessage {
     public static final String CREATED_USER = "User 생성 성공";
     public static final String EXISTING_USER = "이미 가입된 회원입니다. 기존 User 정보 조회 성공";
     public static final String READ_USER_DETAIL = "User 정보 조회 성공";
+    public static final String UPDATE_USER_NICKNAME = "User 닉네임 수정 성공";
 
     public static final String CREATED_BOOK = "Book 생성 성공";
     public static final String READ_BOOK_LIST = "Book List 조회 성공";

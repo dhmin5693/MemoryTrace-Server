@@ -4,6 +4,7 @@ import com.memorytrace.auth.JwtTokenProvider;
 import com.memorytrace.common.S3Uploder;
 import com.memorytrace.domain.User;
 import com.memorytrace.dto.request.UserSaveRequestDto;
+import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.UserRepository;
@@ -63,6 +64,16 @@ public class UserService {
         } catch (Exception e) {
             throw new MemoryTraceException();
         }
+    }
+
+    @Transactional
+    public UserDetailResponseDto updateNickname(HttpHeaders headers, UserUpdateRequestDto request) {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+        User user = userRepository.findById(uid)
+            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+        user.updateNickname(request.getNickname());
+        return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
     }
 
     @Transactional(readOnly = true)
