@@ -10,6 +10,8 @@ import com.memorytrace.repository.UserRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +48,19 @@ public class UserService {
             return new UserDetailResponseDto(entity, jwt);
         } catch (Exception e) {
             log.error("유저 저장 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetailResponseDto findById(HttpHeaders headers) {
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal()).getUid();
+            User user = userRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+            return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
+        } catch (Exception e) {
             throw new MemoryTraceException();
         }
     }
