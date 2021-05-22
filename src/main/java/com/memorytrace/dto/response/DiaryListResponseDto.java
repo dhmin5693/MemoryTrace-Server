@@ -1,9 +1,11 @@
 package com.memorytrace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -43,7 +45,8 @@ public class DiaryListResponseDto extends PageResponseDto {
         private Byte template;
 
         @ApiModelProperty(position = 6, required = true, value = "일기 수정 날짜")
-        private String modifiedDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+        private LocalDateTime modifiedDate;
 
         public DiaryList(Diary entity) {
             this.did = entity.getDid();
@@ -51,7 +54,7 @@ public class DiaryListResponseDto extends PageResponseDto {
             this.title = entity.getTitle();
             this.img = entity.getImg();
             this.template = entity.getTemplate();
-            this.modifiedDate = entity.getModifiedDate().toString();
+            this.modifiedDate = entity.getModifiedDate();
         }
     }
 
