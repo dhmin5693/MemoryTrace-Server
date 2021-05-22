@@ -15,16 +15,24 @@ public class UserDetailResponseDto {
     @ApiModelProperty(position = 2, required = true, value = "사용자 닉네임")
     private String nickName;
 
-    @ApiModelProperty(position = 3, required = true, value = "사용자 프로필 사진")
+    @ApiModelProperty(position = 3, required = true, value = "가입 SNS")
+    private String snsType;
+
+    @ApiModelProperty(position = 4, required = true, value = "사용자 프로필 사진")
     private String profileImg;
 
-    @ApiModelProperty(position = 4, required = true, value = "jwt")
+    @ApiModelProperty(position = 5, required = true, value = "가입일")
+    private String createdDate;
+
+    @ApiModelProperty(position = 6, required = true, value = "jwt")
     private String jwt;
 
     public UserDetailResponseDto(User entity, String jwt) {
         this.uid = entity.getUid();
         this.nickName = entity.getNickname();
+        this.snsType = entity.getSnsKey().split("_")[0];
         this.profileImg = entity.getProfileImg();
+        this.createdDate = entity.getCreatedDate().toString();
         this.jwt = jwt;
     }
 
