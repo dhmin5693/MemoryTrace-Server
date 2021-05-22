@@ -48,6 +48,10 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.isWithdrawal = isWithdrawal;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
