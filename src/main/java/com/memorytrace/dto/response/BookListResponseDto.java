@@ -1,8 +1,10 @@
 package com.memorytrace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.memorytrace.domain.UserBook;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -36,7 +38,8 @@ public class BookListResponseDto extends PageResponseDto {
         private String stickerImg;
 
         @ApiModelProperty(position = 6, required = true, value = "교환 일기장 수정 날짜")
-        private String modifiedDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+        private LocalDateTime modifiedDate;
 
         public BookList(UserBook entity) {
             this.bid = entity.getBid();
@@ -44,7 +47,7 @@ public class BookListResponseDto extends PageResponseDto {
             this.title = entity.getBook().getTitle();
             this.bgColor = entity.getBook().getBgColor();
             this.stickerImg = entity.getBook().getStickerImg();
-            this.modifiedDate = entity.getBook().getModifiedDate().toString();
+            this.modifiedDate = entity.getBook().getModifiedDate();
         }
     }
 

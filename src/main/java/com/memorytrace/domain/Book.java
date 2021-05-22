@@ -57,6 +57,19 @@ public class Book extends BaseTimeEntity {
         this.isDelete = isDelete;
     }
 
+    @Builder(builderClassName = "UpdateBuilder", builderMethodName = "UpdateBuilder")
+    public Book(Long bid, User user, String title, Byte bgColor, String stickerImg,
+        String inviteCode,
+        Byte isDelete) {
+        this.bid = bid;
+        this.user = user;
+        this.title = title;
+        this.bgColor = bgColor;
+        this.stickerImg = stickerImg;
+        this.inviteCode = inviteCode;
+        this.isDelete = isDelete;
+    }
+
     public Book updateWhoseTurnBook(Long bid, Long whoseTurn) {
         this.bid = bid;
         this.user = new User(whoseTurn);

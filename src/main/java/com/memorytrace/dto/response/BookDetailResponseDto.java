@@ -1,9 +1,11 @@
 package com.memorytrace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.memorytrace.domain.Book;
 import com.memorytrace.domain.UserBook;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +24,9 @@ public class BookDetailResponseDto {
     @ApiModelProperty(position = 3, required = true, value = "교환 일기장 초대 코드")
     private String inviteCode;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @ApiModelProperty(position = 4, required = true, value = "교환 일기장 생성날짜")
-    private String createdDate;
+    private LocalDateTime createdDate;
 
     @ApiModelProperty(position = 5, required = true, value = "해당 교환 일기장 초대멤버 리스트")
     private List<UsersInBook> userList;
@@ -51,7 +54,7 @@ public class BookDetailResponseDto {
         this.bid = entity.getBid();
         this.whoseTurn = entity.getUser().getUid();
         this.inviteCode = entity.getInviteCode();
-        this.createdDate = entity.getCreatedDate().toString();
+        this.createdDate = entity.getCreatedDate();
         this.userList = userList;
     }
 }

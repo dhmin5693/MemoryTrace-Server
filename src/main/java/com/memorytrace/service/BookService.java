@@ -5,6 +5,7 @@ import com.memorytrace.domain.Book;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.BookSaveRequestDto;
+import com.memorytrace.dto.request.BookUpdateRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
@@ -29,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookService {
 
     private final BookRepository bookRepository;
+
     private final UserBookRepository userBookRepository;
+
     private final S3Uploder s3Uploder;
 
     @Transactional
@@ -77,7 +80,8 @@ public class BookService {
     @Transactional(readOnly = true)
     public BookDetailResponseDto findByBid(Long bid) {
         try {
-            Book book = bookRepository.findByBid(bid);
+            Book book = bookRepository.findByBid(bid).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
             List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
                 .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
@@ -87,6 +91,21 @@ public class BookService {
             return new BookDetailResponseDto(book, userList);
         } catch (Exception e) {
             log.error("교환일기 조회 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    public void update(BookUpdateRequestDto requestDto, MultipartFile file)
+        throws IOException {
+        String imgUrl = file == null ? null : s3Uploder.upload(file, "book");
+
+        try {
+            Book book = bookRepository.findByBid(requestDto.getBid()).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + requestDto.getBid()));
+
+            bookRepository.save(requestDto.toEntity(imgUrl, book));
+        } catch (Exception e) {
+            log.error("교환일기 수정 중 에러발생", e);
             throw new MemoryTraceException();
         }
     }
