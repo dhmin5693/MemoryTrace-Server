@@ -42,7 +42,8 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public DiaryListResponseDto findByBook_Bid(Long bid, PageRequestDto pageRequestDto) {
         try {
-            Book book = bookRepository.findByBid(bid);
+            Book book = bookRepository.findByBid(bid).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
             Page<Diary> result = diaryRepository
                 .findByBook_Bid(bid, pageRequestDto.getPageableWithSort(pageRequestDto));
@@ -108,8 +109,8 @@ public class DiaryService {
                 }
             }
 
-            Book book = Optional.ofNullable(bookRepository.findByBid(bid))
-                .orElseThrow(() -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
+            Book book = bookRepository.findByBid(bid).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
             bookRepository.save(
                 book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
