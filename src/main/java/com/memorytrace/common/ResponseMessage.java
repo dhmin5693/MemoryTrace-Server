@@ -8,6 +8,7 @@ public class ResponseMessage {
     public static final String UPDATE_USER_NICKNAME = "User 닉네임 수정 성공";
 
     public static final String CREATED_BOOK = "Book 생성 성공";
+    public static final String UPDATE_BOOK = "Book 수정 성공";
     public static final String READ_BOOK_LIST = "Book List 조회 성공";
     public static final String READ_BOOK_DETAIL = "Book 정보 조회 성공";
 
