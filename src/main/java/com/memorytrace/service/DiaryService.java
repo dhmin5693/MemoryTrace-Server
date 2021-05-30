@@ -5,6 +5,7 @@ import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
+import com.memorytrace.dto.request.DiaryExitRequestDto;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
@@ -117,6 +118,35 @@ public class DiaryService {
             );
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    public void exitDiary(Long bid) {
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal())
+                .getUid();
+
+            Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
+            if (book.isPresent()) {
+                int nextTurnNo = 0;
+                List<UserBook> userBookList = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
+                for (UserBook userBook : userBookList) {
+                    if (userBook.getUid() == uid) {
+                        nextTurnNo = (userBook.getTurnNo() + 1) % userBookList.size();
+                    }
+                }
+
+                UserBook nextTurnUser = userBookRepository
+                    .findByBidAndIsWithdrawalAndTurnNo(bid, (byte) 0, nextTurnNo);
+
+                bookRepository.save(book.get().updateWhoseTurnBook(bid, nextTurnUser.getUid()));
+            }
+
+            userBookRepository.save(new DiaryExitRequestDto().toEntity(uid, bid));
+        } catch (Exception e) {
+            log.error("다이어리 나가기 중 에러 발생", e);
             throw new MemoryTraceException();
         }
     }
