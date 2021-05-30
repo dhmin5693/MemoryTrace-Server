@@ -135,9 +135,13 @@ public class DiaryService {
                 .collect(Collectors.toList()).indexOf(uid);
 
             if (book.isPresent()) {
-                User nextUser = idx == userBookList.size() - 1
-                    ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
-                book.get().updateWhoseTurnBook(bid, nextUser);
+                if (userBookList.size() == 1) {
+                    book.get().delete();
+                } else {
+                    User nextUser = idx == userBookList.size() - 1
+                        ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
+                    book.get().updateWhoseTurnBook(bid, nextUser);
+                }
             }
 
             userBookList.get(idx).exit();
