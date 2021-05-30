@@ -52,6 +52,11 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.nickname = nickname;
     }
 
+    public void withdraw() {
+        this.snsKey = "WITHDRAWAL_" + this.snsKey;
+        this.isWithdrawal = 1;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
