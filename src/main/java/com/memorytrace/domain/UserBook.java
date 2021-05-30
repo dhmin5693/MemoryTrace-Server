@@ -49,4 +49,8 @@ public class UserBook {
         this.turnNo = turnNo;
         this.isWithdrawal = isWithdrawal;
     }
+
+    public void exit() {
+        this.isWithdrawal = 1;
+    }
 }
