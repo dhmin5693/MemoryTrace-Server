@@ -75,6 +75,17 @@ public class UserController {
                 userService.updateNickname(headers, request)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "사용자 탈퇴")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "사용자 탈퇴 완료")
+    })
+    @GetMapping("/withdrawal")
+    public ResponseEntity<DefaultRes> withdraw() {
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER,
+                userService.withdraw()), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
     @GetMapping("/jwt/{uid}")
     public ResponseEntity<String> getToken(@PathVariable Long uid) {

@@ -67,6 +67,17 @@ public class UserService {
         return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
     }
 
+    @Transactional
+    public Long withdraw() {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+        User user = userRepository.findById(uid)
+            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+        user.withdraw();
+        // TODO: 가입한 book에서 모두 탈퇴하는 기능 추가
+        return uid;
+    }
+
     @Transactional(readOnly = true)
     public String getToken(Long uid) {
         User user = userRepository.findByUid(uid).orElseThrow(
