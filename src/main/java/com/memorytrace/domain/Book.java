@@ -70,9 +70,8 @@ public class Book extends BaseTimeEntity {
         this.isDelete = isDelete;
     }
 
-    public Book updateWhoseTurnBook(Long bid, Long whoseTurn) {
+    public void updateWhoseTurnBook(Long bid, User nextUser) {
         this.bid = bid;
-        this.user = new User(whoseTurn);
-        return this;
+        this.user = nextUser;
     }
 }
