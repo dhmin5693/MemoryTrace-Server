@@ -38,15 +38,19 @@ public class InviteService {
             .orElseThrow(() -> new IllegalArgumentException(
                 "유효하지 않는 초대코드 입니다. 다시 시도해주세요."));
 
-        Long bid = book.getBid();
+        if (userBookRepository.findByBidAndUidAndIsWithdrawal(book.getBid(), uid, (byte) 0)
+            .isPresent()) {
+            throw new IllegalArgumentException("해당 교환일기에 이미 참여하고 있는 중입니다. ");
+        }
 
         try {
-            List<UserBook> userBook = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
+            List<UserBook> userBook = userBookRepository
+                .findByBidAndIsWithdrawal(book.getBid(), (byte) 0);
 
             final int nowTurn = userBook.size();
 
             userBookRepository.save(UserBook.builder()
-                .bid(bid)
+                .bid(book.getBid())
                 .uid(uid)
                 .isWithdrawal((byte) 0)
                 .turnNo(nowTurn)
