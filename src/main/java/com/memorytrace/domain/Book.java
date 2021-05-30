@@ -81,4 +81,9 @@ public class Book extends BaseTimeEntity {
         this.bgColor = requestDto.getBgColor();
         this.stickerImg = stickerImg;
     }
+
+    public void delete() {
+        this.isDelete = 1;
+        this.inviteCode = null;
+    }
 }
