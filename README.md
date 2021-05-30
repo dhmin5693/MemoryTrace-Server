@@ -1,7 +1,7 @@
 # duck-z(덕지)
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=Soft&color=gradient&hexcode&height=300&section=header&text=duck-z&fontSize=90&animation=fadeIn)
+![header](https://capsule-render.vercel.app/api?type=Soft&color=gradient&hexcode&height=200&section=header&text=duck-z&fontSize=90&animation=fadeIn)
 </div>
 
 <p align="center">
@@ -35,7 +35,8 @@
 
 # ERD
 
-![image](https://user-images.githubusercontent.com/46226445/120103164-45c2b280-c189-11eb-93a5-aade610e08d6.png)
+![image](https://user-images.githubusercontent.com/46776761/120105490-1c5b5400-c194-11eb-9b1b-4f4d9d6e93ca.png)
+
 
 # 협업
 - [git flow](https://woowabros.github.io/experience/2017/10/30/baemin-mobile-git-branch-strategy.html)
