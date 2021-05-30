@@ -95,6 +95,7 @@ public class BookService {
         }
     }
 
+    @Transactional
     public void update(BookUpdateRequestDto requestDto, MultipartFile file)
         throws IOException {
         String imgUrl = file == null ? null : s3Uploder.upload(file, "book");
@@ -103,7 +104,7 @@ public class BookService {
             Book book = bookRepository.findByBid(requestDto.getBid()).orElseThrow(
                 () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + requestDto.getBid()));
 
-            bookRepository.save(requestDto.toEntity(imgUrl, book));
+            book.update(requestDto, imgUrl);
         } catch (Exception e) {
             log.error("교환일기 수정 중 에러발생", e);
             throw new MemoryTraceException();
