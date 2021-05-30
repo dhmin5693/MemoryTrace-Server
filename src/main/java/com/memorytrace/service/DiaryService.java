@@ -127,6 +127,13 @@ public class DiaryService {
                 .getUid();
 
             Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
+
+            List<UserBook> userBookList = userBookRepository
+                .findByBidAndIsWithdrawal(bid, (byte) 0);
+
+            int idx = userBookList.stream().map(d -> d.getUid())
+                .collect(Collectors.toList()).indexOf(uid);
+
             if (book.isPresent()) {
                 User nextUser = idx == userBookList.size() - 1
                     ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
