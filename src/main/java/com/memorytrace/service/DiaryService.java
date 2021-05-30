@@ -5,7 +5,6 @@ import com.memorytrace.domain.Book;
 import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
-import com.memorytrace.dto.request.DiaryExitRequestDto;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
@@ -113,15 +112,14 @@ public class DiaryService {
             Book book = bookRepository.findByBid(bid).orElseThrow(
                 () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
-            bookRepository.save(
-                book.updateWhoseTurnBook(bid, userBookList.get(index).getUid())
-            );
+            book.updateWhoseTurnBook(bid, userBookList.get(index).getUser());
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
             throw new MemoryTraceException();
         }
     }
 
+    @Transactional
     public void exitDiary(Long bid) {
         try {
             Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
@@ -130,21 +128,12 @@ public class DiaryService {
 
             Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
             if (book.isPresent()) {
-                int nextTurnNo = 0;
-                List<UserBook> userBookList = userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0);
-                for (UserBook userBook : userBookList) {
-                    if (userBook.getUid() == uid) {
-                        nextTurnNo = (userBook.getTurnNo() + 1) % userBookList.size();
-                    }
-                }
-
-                UserBook nextTurnUser = userBookRepository
-                    .findByBidAndIsWithdrawalAndTurnNo(bid, (byte) 0, nextTurnNo);
-
-                bookRepository.save(book.get().updateWhoseTurnBook(bid, nextTurnUser.getUid()));
+                User nextUser = idx == userBookList.size() - 1
+                    ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
+                book.get().updateWhoseTurnBook(bid, nextUser);
             }
 
-            userBookRepository.save(new DiaryExitRequestDto().toEntity(uid, bid));
+            userBookList.get(idx).exit();
         } catch (Exception e) {
             log.error("다이어리 나가기 중 에러 발생", e);
             throw new MemoryTraceException();
