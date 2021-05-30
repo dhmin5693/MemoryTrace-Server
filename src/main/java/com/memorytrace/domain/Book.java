@@ -1,5 +1,6 @@
 package com.memorytrace.domain;
 
+import com.memorytrace.dto.request.BookUpdateRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,5 +74,11 @@ public class Book extends BaseTimeEntity {
     public void updateWhoseTurnBook(Long bid, User nextUser) {
         this.bid = bid;
         this.user = nextUser;
+    }
+
+    public void update(BookUpdateRequestDto requestDto, String stickerImg) {
+        this.title = requestDto.getTitle();
+        this.bgColor = requestDto.getBgColor();
+        this.stickerImg = stickerImg;
     }
 }
