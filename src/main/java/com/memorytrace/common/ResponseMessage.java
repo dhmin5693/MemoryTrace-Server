@@ -14,6 +14,7 @@ public class ResponseMessage {
     public static final String READ_BOOK_DETAIL = "Book 정보 조회 성공";
 
     public static final String CREATED_DIARY = "Diary 생성 성공";
+    public static final String EXIT_DIARY = "Diary 나가기 성공";
     public static final String READ_DIARY_LIST = "Diary List 조회 성공";
     public static final String READ_DIARY_DETAIL = "Diary 정보 조회 성공";
 
