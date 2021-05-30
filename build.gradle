@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.2.3.RELEASE'
     implementation "software.amazon.awssdk:s3:2.13.0"
     compile('org.springframework.cloud:spring-cloud-starter-aws')
     compile('org.springframework.boot:spring-boot-starter-web')
