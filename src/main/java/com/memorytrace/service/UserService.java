@@ -6,6 +6,7 @@ import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
+import com.memorytrace.repository.UserBookRepository;
 import com.memorytrace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final UserBookRepository userBookRepository;
+    private final DiaryService diaryService;
 
     @Transactional(readOnly = true)
     public UserDetailResponseDto getExistingUser(UserSaveRequestDto request) {
@@ -73,8 +76,9 @@ public class UserService {
             .getPrincipal()).getUid();
         User user = userRepository.findById(uid)
             .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+        userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0).stream()
+            .forEach(ub -> diaryService.exitDiary(ub.getBid()));
         user.withdraw();
-        // TODO: 가입한 book에서 모두 탈퇴하는 기능 추가
         return uid;
     }
 
