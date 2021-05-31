@@ -26,7 +26,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(length = 50, nullable = false)
     private String nickname;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, unique = true)
     private String snsKey;
 
     @Column(length = 256)
@@ -53,7 +53,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     }
 
     public void withdraw() {
-        this.snsKey = "WITHDRAWAL_" + this.snsKey;
+        this.snsKey = null;
         this.isWithdrawal = 1;
     }
 
