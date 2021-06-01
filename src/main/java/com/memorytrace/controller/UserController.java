@@ -81,9 +81,9 @@ public class UserController {
     })
     @GetMapping("/withdrawal")
     public ResponseEntity<DefaultRes> withdraw() {
+        userService.withdraw();
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER,
-                userService.withdraw()), HttpStatus.OK);
+            DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
     }
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
