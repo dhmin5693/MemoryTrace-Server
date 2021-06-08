@@ -33,7 +33,7 @@ public class BookDetailResponseDto {
     @ApiModelProperty(position = 6, value = "스티커 이미지")
     private String stickerImg;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(position = 7, required = true, value = "교환 일기장 생성날짜")
     private LocalDateTime createdDate;
 
