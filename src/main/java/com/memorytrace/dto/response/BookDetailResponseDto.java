@@ -24,11 +24,20 @@ public class BookDetailResponseDto {
     @ApiModelProperty(position = 3, required = true, value = "교환 일기장 초대 코드")
     private String inviteCode;
 
+    @ApiModelProperty(position = 4, required = true, value = "교환 일기장 제목")
+    private String title;
+
+    @ApiModelProperty(position = 5, required = true, value = "교환 일기장 배경 색상")
+    private Byte bgColor;
+
+    @ApiModelProperty(position = 6, value = "스티커 이미지")
+    private String stickerImg;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-    @ApiModelProperty(position = 4, required = true, value = "교환 일기장 생성날짜")
+    @ApiModelProperty(position = 7, required = true, value = "교환 일기장 생성날짜")
     private LocalDateTime createdDate;
 
-    @ApiModelProperty(position = 5, required = true, value = "해당 교환 일기장 초대멤버 리스트")
+    @ApiModelProperty(position = 8, required = true, value = "해당 교환 일기장 초대멤버 리스트")
     private List<UsersInBook> userList;
 
     @Getter
@@ -54,6 +63,9 @@ public class BookDetailResponseDto {
         this.bid = entity.getBid();
         this.whoseTurn = entity.getUser().getUid();
         this.inviteCode = entity.getInviteCode();
+        this.title = entity.getTitle();
+        this.bgColor = entity.getBgColor();
+        this.stickerImg = entity.getStickerImg();
         this.createdDate = entity.getCreatedDate();
         this.userList = userList;
     }
