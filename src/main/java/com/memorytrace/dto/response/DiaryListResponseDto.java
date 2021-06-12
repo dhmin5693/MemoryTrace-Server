@@ -45,7 +45,7 @@ public class DiaryListResponseDto extends PageResponseDto {
         private Byte template;
 
         @ApiModelProperty(position = 6, required = true, value = "일기 수정 날짜")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime modifiedDate;
 
         public DiaryList(Diary entity) {

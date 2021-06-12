@@ -32,7 +32,7 @@ public class DiaryDetailResponseDto {
     private Byte template;
 
     @ApiModelProperty(position = 7, required = true, value = "작성 시간")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
     public DiaryDetailResponseDto(Diary entity) {
