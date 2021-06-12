@@ -5,7 +5,6 @@ import com.memorytrace.domain.UserBook;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +36,10 @@ public class BookListResponseDto extends PageResponseDto {
         @ApiModelProperty(position = 5, value = "스티커 이미지")
         private String stickerImg;
 
-        @ApiModelProperty(position = 6, required = true, value = "교환 일기장 수정 날짜")
+        @ApiModelProperty(position = 6, value = "자신을 제외한 교환일기 참여자 수")
+        private int restOfPeopleCnt;
+
+        @ApiModelProperty(position = 7, required = true, value = "교환 일기장 수정 날짜")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime modifiedDate;
 
@@ -47,6 +49,7 @@ public class BookListResponseDto extends PageResponseDto {
             this.title = entity.getBook().getTitle();
             this.bgColor = entity.getBook().getBgColor();
             this.stickerImg = entity.getBook().getStickerImg();
+            this.restOfPeopleCnt = entity.getRestOfPeopleCnt() - 1;
             this.modifiedDate = entity.getBook().getModifiedDate();
         }
     }

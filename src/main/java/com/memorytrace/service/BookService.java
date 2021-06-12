@@ -61,9 +61,8 @@ public class BookService {
     public BookListResponseDto findByUidAndIsWithdrawal(PageRequestDto pageRequestDto) {
         Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
             .getPrincipal()).getUid();
-        Page<UserBook> userBook = userBookRepository
-            .findByUidAndIsWithdrawal(uid, (byte) 0,
-                pageRequestDto.getPageableWithBookSort(pageRequestDto));
+        Page<UserBook> userBook = userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0,
+            pageRequestDto.getPageableWithBookSort(pageRequestDto));
 
         try {
             List<BookListResponseDto.BookList> bookLists = userBook.stream()
