@@ -7,7 +7,6 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,24 +42,22 @@ public class UserBook {
     @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
     private Byte isWithdrawal;
 
-    private int restOfPeopleCnt;
-
     @Builder
-    public UserBook(Long uid, Long bid, Integer turnNo, Byte isWithdrawal) {
+    public UserBook(Long uid, Long bid, Integer turnNo, Byte isWithdrawal, int restOfPeopleCnt) {
         this.uid = uid;
         this.bid = bid;
         this.turnNo = turnNo;
+//        this.restOfPeopleCnt = restOfPeopleCnt;
         this.isWithdrawal = isWithdrawal;
     }
 
-    public void setRestOfPeopleCnt(int restOfPeopleCnt) {
-        this.restOfPeopleCnt = restOfPeopleCnt;
-    }
+//    public void setRestOfPeopleCnt(int restOfPeopleCnt) {
+//        this.restOfPeopleCnt = restOfPeopleCnt;
+//    }
 
-    @Transient
-    public int getetRestOfPeopleCnt() {
-        return restOfPeopleCnt;
-    }
+//    public int getRestOfPeopleCnt() {
+//        return restOfPeopleCnt;
+//    }
 
     public void exit() {
         this.isWithdrawal = 1;

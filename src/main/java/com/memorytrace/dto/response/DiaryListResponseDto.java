@@ -44,9 +44,9 @@ public class DiaryListResponseDto extends PageResponseDto {
         @ApiModelProperty(position = 5, required = true, value = "속지 템플릿(default = 0)")
         private Byte template;
 
-        @ApiModelProperty(position = 6, required = true, value = "일기 수정 날짜")
+        @ApiModelProperty(position = 6, required = true, value = "일기 작성 날짜")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime modifiedDate;
+        private LocalDateTime createdDate;
 
         public DiaryList(Diary entity) {
             this.did = entity.getDid();
@@ -54,7 +54,7 @@ public class DiaryListResponseDto extends PageResponseDto {
             this.title = entity.getTitle();
             this.img = entity.getImg();
             this.template = entity.getTemplate();
-            this.modifiedDate = entity.getModifiedDate();
+            this.createdDate = entity.getCreatedDate();
         }
     }
 

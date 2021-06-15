@@ -36,8 +36,8 @@ public class BookListResponseDto extends PageResponseDto {
         @ApiModelProperty(position = 5, value = "스티커 이미지")
         private String stickerImg;
 
-        @ApiModelProperty(position = 6, value = "자신을 제외한 교환일기 참여자 수")
-        private int restOfPeopleCnt;
+//        @ApiModelProperty(position = 6, value = "현재 교환일기 참여자 수")
+//        private int numOfPeople;
 
         @ApiModelProperty(position = 7, required = true, value = "교환 일기장 수정 날짜")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -45,11 +45,11 @@ public class BookListResponseDto extends PageResponseDto {
 
         public BookList(UserBook entity) {
             this.bid = entity.getBid();
-            this.nickname = entity.getBook().getUser().getNickname();
+            this.nickname = entity.getUser().getNickname();
             this.title = entity.getBook().getTitle();
             this.bgColor = entity.getBook().getBgColor();
             this.stickerImg = entity.getBook().getStickerImg();
-            this.restOfPeopleCnt = entity.getRestOfPeopleCnt() - 1;
+//            this.restOfPeopleCnt = entity.getRestOfPeopleCnt();
             this.modifiedDate = entity.getBook().getModifiedDate();
         }
     }
