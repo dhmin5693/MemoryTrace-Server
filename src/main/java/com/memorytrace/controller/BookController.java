@@ -9,6 +9,7 @@ import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.BookDetailResponseDto;
 import com.memorytrace.dto.response.BookListResponseDto;
 import com.memorytrace.dto.response.BookSaveResponseDto;
+import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -87,5 +88,16 @@ public class BookController {
         BookDetailResponseDto book = bookService.findByBid(bid);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_DETAIL, book), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "해당 유저 교환일기 나가기")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "해당 교환일기 나가기 성공")
+    })
+    @PutMapping("exit/{bid}")
+    public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> exitDiary(@PathVariable Long bid) {
+        bookService.exitBook(bid);
+        return new ResponseEntity<>(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.EXIT_DIARY), HttpStatus.OK);
     }
 }

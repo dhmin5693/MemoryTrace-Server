@@ -45,7 +45,7 @@ public class InviteService {
 
         try {
             List<UserBook> userBook = userBookRepository
-                .findByBidAndIsWithdrawal(book.getBid(), (byte) 0);
+                .findByBidAndIsWithdrawalOrderByTurnNo(book.getBid(), (byte) 0);
 
             final int nowTurn = userBook.size();
 

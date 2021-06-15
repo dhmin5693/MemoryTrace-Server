@@ -27,7 +27,6 @@ public class PageRequestDto {
     }
 
     public Pageable getPageableWithBookSort(PageRequestDto pageRequestDto) {
-        return PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
-            Sort.by("book.modifiedDate").descending());
+        return PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
     }
 }
