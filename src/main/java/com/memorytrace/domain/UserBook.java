@@ -43,12 +43,21 @@ public class UserBook {
     private Byte isWithdrawal;
 
     @Builder
-    public UserBook(Long uid, Long bid, Integer turnNo, Byte isWithdrawal) {
+    public UserBook(Long uid, Long bid, Integer turnNo, Byte isWithdrawal, int restOfPeopleCnt) {
         this.uid = uid;
         this.bid = bid;
         this.turnNo = turnNo;
+//        this.restOfPeopleCnt = restOfPeopleCnt;
         this.isWithdrawal = isWithdrawal;
     }
+
+//    public void setRestOfPeopleCnt(int restOfPeopleCnt) {
+//        this.restOfPeopleCnt = restOfPeopleCnt;
+//    }
+
+//    public int getRestOfPeopleCnt() {
+//        return restOfPeopleCnt;
+//    }
 
     public void exit() {
         this.isWithdrawal = 1;

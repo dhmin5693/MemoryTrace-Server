@@ -14,11 +14,8 @@ public interface UserBookRepository extends JpaRepository<UserBook, UserBookPK> 
 
     List<UserBook> findByUidAndIsWithdrawal(Long uid, Byte isWithdrawal);
 
-    List<UserBook> findByBidAndIsWithdrawal(Long bid, Byte isWithdrawal);
-
     List<UserBook> findByBidAndIsWithdrawalOrderByTurnNo(Long bid, Byte isWithdrawal);
 
     Optional<UserBook> findByBidAndUidAndIsWithdrawal(Long bid, Long uid, Byte isWithdrawal);
 
-    UserBook findByBidAndIsWithdrawalAndTurnNo(Long bid, Byte isWithdrawal, int nextTurnNo);
 }
