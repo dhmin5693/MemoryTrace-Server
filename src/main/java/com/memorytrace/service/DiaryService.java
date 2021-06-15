@@ -15,6 +15,7 @@ import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -96,7 +97,7 @@ public class DiaryService {
     public void updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
-            .ofNullable(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
+            .ofNullable(userBookRepository.findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
         try {
@@ -115,38 +116,6 @@ public class DiaryService {
             book.updateWhoseTurnBook(bid, userBookList.get(index).getUser());
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
-            throw new MemoryTraceException();
-        }
-    }
-
-    @Transactional
-    public void exitDiary(Long bid) {
-        try {
-            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal())
-                .getUid();
-
-            Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
-
-            List<UserBook> userBookList = userBookRepository
-                .findByBidAndIsWithdrawal(bid, (byte) 0);
-
-            int idx = userBookList.stream().map(d -> d.getUid())
-                .collect(Collectors.toList()).indexOf(uid);
-
-            if (book.isPresent()) {
-                if (userBookList.size() == 1) {
-                    book.get().delete();
-                } else {
-                    User nextUser = idx == userBookList.size() - 1
-                        ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
-                    book.get().updateWhoseTurnBook(bid, nextUser);
-                }
-            }
-
-            userBookList.get(idx).exit();
-        } catch (Exception e) {
-            log.error("다이어리 나가기 중 에러 발생", e);
             throw new MemoryTraceException();
         }
     }
