@@ -48,7 +48,8 @@ public class BookListResponseDto extends PageResponseDto {
             this.nickname = entity.get("nickname").toString();
             this.title = entity.get("title").toString();
             this.bgColor = Byte.parseByte(entity.get("bg_color").toString());
-            this.stickerImg = entity.get("sticker_img").toString();
+            this.stickerImg =
+                entity.get("sticker_img") != null ? entity.get("sticker_img").toString() : null;
             this.numOfPeople = Byte.parseByte(entity.get("num_of_people").toString());
             this.modifiedDate = LocalDateTime
                 .parse(entity.get("modified_date").toString().replace(' ', 'T'));
