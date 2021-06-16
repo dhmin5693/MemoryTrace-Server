@@ -19,7 +19,8 @@ public interface UserBookRepository extends JpaRepository<UserBook, UserBookPK> 
         + "left join book b on ub.bid = b.bid\n"
         + "left join user u on b.whose_turn = u.uid\n"
         + "where ub.uid = :uid and ub.is_withdrawal = :isWithdrawal\n"
-        + "order by b.modified_date desc", nativeQuery = true)
+        + "order by b.modified_date desc",
+        countQuery = "select count(*) from user_book where uid = :uid and is_withdrawal = :isWithdrawal", nativeQuery = true)
     Page<Map<String, Object>> findByUidAndIsWithdrawal(@Param("uid") Long uid,
         @Param("isWithdrawal") Byte isWithdrawal, Pageable pageable);
 
