@@ -8,6 +8,7 @@ import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import com.memorytrace.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,8 @@ public class InviteService {
                 .isWithdrawal((byte) 0)
                 .turnNo(nowTurn)
                 .build());
+
+            book.updateModifiedDate();
         } catch (Exception e) {
             log.error("초대한 멤버 저장 중 에러발생", e);
             throw new MemoryTraceException();
