@@ -21,9 +21,6 @@ public class DiaryUpdateRequestDto {
     @ApiModelProperty(position = 2, required = true, dataType = "String", value = "일기 제목")
     private String title;
 
-    @ApiModelProperty(position = 3, dataType = "String", value = "사용자가 사진 수정을 안했을 시, 기존 이미지 url")
-    private String existingImg;
-
-    @ApiModelProperty(position = 4, dataType = "String", value = "일기 내용")
+    @ApiModelProperty(position = 3, dataType = "String", value = "일기 내용")
     private String content;
 }
