@@ -1,8 +1,10 @@
 package com.memorytrace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.memorytrace.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
@@ -22,7 +24,8 @@ public class UserDetailResponseDto {
     private String profileImg;
 
     @ApiModelProperty(position = 5, required = true, value = "가입일")
-    private String createdDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdDate;
 
     @ApiModelProperty(position = 6, required = true, value = "jwt")
     private String jwt;
@@ -32,7 +35,7 @@ public class UserDetailResponseDto {
         this.nickname = entity.getNickname();
         this.snsType = entity.getSnsKey().split("_")[0];
         this.profileImg = entity.getProfileImg();
-        this.createdDate = entity.getCreatedDate().toString();
+        this.createdDate = entity.getCreatedDate();
         this.jwt = jwt;
     }
 
