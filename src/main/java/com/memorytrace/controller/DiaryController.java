@@ -99,4 +99,5 @@ public class DiaryController {
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.EXIT_DIARY), HttpStatus.OK);
     }
+
 }

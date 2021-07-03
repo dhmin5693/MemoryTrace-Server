@@ -15,6 +15,8 @@ import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +63,9 @@ public class BookService {
     public BookListResponseDto findByUidAndIsWithdrawal(PageRequestDto pageRequestDto) {
         Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
             .getPrincipal()).getUid();
-        Page<UserBook> userBook = userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0,
-            pageRequestDto.getPageableWithBookSort(pageRequestDto));
+        Page<Map<String, Object>> userBook = userBookRepository
+            .findByUidAndIsWithdrawal(uid, (byte) 0,
+                pageRequestDto.getPageableWithBookSort(pageRequestDto));
 
         try {
             List<BookListResponseDto.BookList> bookLists = userBook.stream()
@@ -106,6 +109,38 @@ public class BookService {
             book.update(requestDto, imgUrl);
         } catch (Exception e) {
             log.error("교환일기 수정 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    @Transactional
+    public void exitBook(Long bid) {
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal())
+                .getUid();
+
+            Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
+
+            List<UserBook> userBookList = userBookRepository
+                .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0);
+
+            int idx = userBookList.stream().map(d -> d.getUid())
+                .collect(Collectors.toList()).indexOf(uid);
+
+            if (book.isPresent()) {
+                if (userBookList.size() == 1) {
+                    book.get().delete();
+                } else {
+                    User nextUser = idx == userBookList.size() - 1
+                        ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
+                    book.get().updateWhoseTurnBook(bid, nextUser);
+                }
+            }
+
+            userBookList.get(idx).exit();
+        } catch (Exception e) {
+            log.error("다이어리 나가기 중 에러 발생", e);
             throw new MemoryTraceException();
         }
     }

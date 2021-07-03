@@ -23,7 +23,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final UserBookRepository userBookRepository;
-    private final DiaryService diaryService;
+    private final BookService bookService;
 
     @Transactional(readOnly = true)
     public UserDetailResponseDto getExistingUser(UserSaveRequestDto request) {
@@ -77,7 +77,7 @@ public class UserService {
         User user = userRepository.findById(uid)
             .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
         userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0).stream()
-            .forEach(ub -> diaryService.exitDiary(ub.getBid()));
+            .forEach(ub -> bookService.exitBook(ub.getBid()));
         user.withdraw();
         return uid;
     }
