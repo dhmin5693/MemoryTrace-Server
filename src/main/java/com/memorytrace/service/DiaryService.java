@@ -6,6 +6,7 @@ import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.DiaryUpdateRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
@@ -119,4 +120,52 @@ public class DiaryService {
             throw new MemoryTraceException();
         }
     }
+
+    @Transactional
+    public void updateDiary(DiaryUpdateRequestDto request, MultipartFile file) {
+        try {
+            Diary diary = diaryRepository.findByDid(request.getDid()).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 다이어리가 없습니다. did=" + request.getDid()));
+
+            String imgUrl = file == null ? diary.getImg() : s3Uploder.upload(file, "diary");
+
+            diary.update(request.getTitle(), imgUrl, request.getContent());
+        } catch (Exception e) {
+            log.error("Diary 수정 중 에러 발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    @Transactional
+    public void exitDiary(Long bid) {
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal())
+                .getUid();
+
+            Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
+
+            List<UserBook> userBookList = userBookRepository
+                .findByBidAndIsWithdrawal(bid, (byte) 0);
+
+            int idx = userBookList.stream().map(d -> d.getUid())
+                .collect(Collectors.toList()).indexOf(uid);
+
+            if (book.isPresent()) {
+                if (userBookList.size() == 1) {
+                    book.get().delete();
+                } else {
+                    User nextUser = idx == userBookList.size() - 1
+                        ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
+                    book.get().updateWhoseTurnBook(bid, nextUser);
+                }
+            }
+
+            userBookList.get(idx).exit();
+        } catch (Exception e) {
+            log.error("다이어리 나가기 중 에러 발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+  
 }
