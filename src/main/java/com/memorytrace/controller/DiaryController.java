@@ -4,6 +4,7 @@ import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.DiaryUpdateRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
@@ -42,7 +43,8 @@ public class DiaryController {
         @ApiResponse(code = 201, message = "일기 작성 성공")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<DefaultRes<DiarySaveResponseDto>> save(@ModelAttribute @Valid DiarySaveRequestDto requestDto,
+    public ResponseEntity<DefaultRes<DiarySaveResponseDto>> save(
+        @ModelAttribute @Valid DiarySaveRequestDto requestDto,
         @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
@@ -71,6 +73,19 @@ public class DiaryController {
         DiaryDetailResponseDto diary = diaryService.findByDid(did);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_DETAIL, diary), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "일기 수정")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "일기 수정 성공")
+    })
+    @PutMapping("/{did}")
+    public ResponseEntity<DefaultRes> updateDiary(
+        @ModelAttribute @Valid DiaryUpdateRequestDto requestDto,
+        @RequestPart(value = "img", required = false) MultipartFile file) {
+        diaryService.updateDiary(requestDto, file);
+        return new ResponseEntity<>(
+            DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_DIARY), HttpStatus.OK);
     }
 
 
