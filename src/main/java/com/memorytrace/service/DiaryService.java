@@ -16,7 +16,6 @@ import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,36 +135,4 @@ public class DiaryService {
         }
     }
 
-    @Transactional
-    public void exitDiary(Long bid) {
-        try {
-            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal())
-                .getUid();
-
-            Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
-
-            List<UserBook> userBookList = userBookRepository
-                .findByBidAndIsWithdrawal(bid, (byte) 0);
-
-            int idx = userBookList.stream().map(d -> d.getUid())
-                .collect(Collectors.toList()).indexOf(uid);
-
-            if (book.isPresent()) {
-                if (userBookList.size() == 1) {
-                    book.get().delete();
-                } else {
-                    User nextUser = idx == userBookList.size() - 1
-                        ? userBookList.get(0).getUser() : userBookList.get(idx + 1).getUser();
-                    book.get().updateWhoseTurnBook(bid, nextUser);
-                }
-            }
-
-            userBookList.get(idx).exit();
-        } catch (Exception e) {
-            log.error("다이어리 나가기 중 에러 발생", e);
-            throw new MemoryTraceException();
-        }
-    }
-  
 }
