@@ -1,11 +1,14 @@
 package com.memorytrace.service;
 
 import com.memorytrace.auth.JwtTokenProvider;
+import com.memorytrace.domain.FcmToken;
 import com.memorytrace.domain.User;
+import com.memorytrace.dto.request.FcmSaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
+import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
 import com.memorytrace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final UserBookRepository userBookRepository;
+    private final FcmTokenRepository fcmTokenRepository;
     private final BookService bookService;
 
     @Transactional(readOnly = true)
@@ -80,6 +84,11 @@ public class UserService {
             .forEach(ub -> bookService.exitBook(ub.getBid()));
         user.withdraw();
         return uid;
+    }
+
+    @Transactional
+    public FcmToken fcmSave(FcmSaveRequestDto request) {
+        return fcmTokenRepository.save(request.toEntity());
     }
 
     @Transactional(readOnly = true)
