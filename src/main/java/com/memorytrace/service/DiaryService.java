@@ -16,6 +16,7 @@ import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -97,7 +98,7 @@ public class DiaryService {
     public void updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
-            .ofNullable(userBookRepository.findByBidAndIsWithdrawal(bid, (byte) 0))
+            .ofNullable(userBookRepository.findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0))
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
         try {
@@ -166,4 +167,5 @@ public class DiaryService {
             throw new MemoryTraceException();
         }
     }
+  
 }
