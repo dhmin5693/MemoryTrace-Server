@@ -50,4 +50,10 @@ public class Diary extends BaseTimeEntity {
         this.img = img;
         this.content = content;
     }
+
+    public void update(String title, String img, String content) {
+        this.title = title;
+        this.img = img;
+        this.content = content;
+    }
 }

@@ -3,6 +3,7 @@ package com.memorytrace.controller;
 import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
+import com.memorytrace.dto.request.FcmSaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
@@ -84,6 +85,18 @@ public class UserController {
         userService.withdraw();
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FCM token 저장")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "FCM token 저장 완료")
+    })
+    @PostMapping("/fcm")
+    public ResponseEntity<DefaultRes<FcmSaveRequestDto>> save(
+        @RequestBody @Valid FcmSaveRequestDto request) {
+        userService.fcmSave(request);
+        return new ResponseEntity(
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
