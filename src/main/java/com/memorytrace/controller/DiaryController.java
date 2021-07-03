@@ -77,7 +77,7 @@ public class DiaryController {
 
     @ApiOperation(value = "일기 수정")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "일기 수정 성공")
+        @ApiResponse(code = 200, message = "일기 수정 성공")
     })
     @PutMapping("/{did}")
     public ResponseEntity<DefaultRes> updateDiary(
