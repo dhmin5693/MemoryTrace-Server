@@ -88,16 +88,4 @@ public class DiaryController {
             DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_DIARY), HttpStatus.OK);
     }
 
-
-    @ApiOperation(value = "해당 유저 다이어리 나가기")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "해당 유저 다이어리 나가기 성공")
-    })
-    @PutMapping("/exit/{bid}")
-    public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> exitDiary(@PathVariable Long bid) {
-        diaryService.exitDiary(bid);
-        return new ResponseEntity<>(
-            DefaultRes.res(StatusCode.OK, ResponseMessage.EXIT_DIARY), HttpStatus.OK);
-    }
-
 }
