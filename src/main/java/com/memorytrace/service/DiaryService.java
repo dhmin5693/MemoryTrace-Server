@@ -126,7 +126,7 @@ public class DiaryService {
             Diary diary = diaryRepository.findByDid(request.getDid()).orElseThrow(
                 () -> new IllegalArgumentException("검색 되는 다이어리가 없습니다. did=" + request.getDid()));
 
-            String imgUrl = file == null ? request.getExistingImg() : s3Uploder.upload(file, "diary");
+            String imgUrl = file == null ? diary.getImg() : s3Uploder.upload(file, "diary");
 
             diary.update(request.getTitle(), imgUrl, request.getContent());
         } catch (Exception e) {
