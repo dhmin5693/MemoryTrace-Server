@@ -6,6 +6,7 @@ import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
+import com.memorytrace.dto.request.DiaryUpdateRequestDto;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
@@ -115,6 +116,21 @@ public class DiaryService {
             book.updateWhoseTurnBook(bid, userBookList.get(index).getUser());
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
+            throw new MemoryTraceException();
+        }
+    }
+
+    @Transactional
+    public void updateDiary(DiaryUpdateRequestDto request, MultipartFile file) {
+        try {
+            Diary diary = diaryRepository.findByDid(request.getDid()).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 다이어리가 없습니다. did=" + request.getDid()));
+
+            String imgUrl = file == null ? request.getExistingImg() : s3Uploder.upload(file, "diary");
+
+            diary.update(request.getTitle(), imgUrl, request.getContent());
+        } catch (Exception e) {
+            log.error("Diary 수정 중 에러 발생", e);
             throw new MemoryTraceException();
         }
     }
