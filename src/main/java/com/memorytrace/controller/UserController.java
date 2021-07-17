@@ -7,6 +7,7 @@ import com.memorytrace.dto.request.FcmSaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
+import com.memorytrace.service.FcmService;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+
+    private final FcmService fcmService;
 
     @ApiOperation(value = "사용자 생성")
     @ApiResponses(value = {
@@ -83,6 +86,7 @@ public class UserController {
     @GetMapping("/withdrawal")
     public ResponseEntity<DefaultRes> withdraw() {
         userService.withdraw();
+        fcmService.deleteAllTokens();
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
     }
@@ -96,7 +100,7 @@ public class UserController {
         @RequestBody @Valid FcmSaveRequestDto request) {
         userService.fcmSave(request);
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER), HttpStatus.CREATED);
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_TOKEN), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")

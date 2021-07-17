@@ -7,6 +7,7 @@ import com.memorytrace.domain.User;
 import com.memorytrace.domain.UserBook;
 import com.memorytrace.dto.request.DiarySaveRequestDto;
 import com.memorytrace.dto.request.DiaryUpdateRequestDto;
+import com.memorytrace.dto.request.Message;
 import com.memorytrace.dto.request.PageRequestDto;
 import com.memorytrace.dto.response.DiaryDetailResponseDto;
 import com.memorytrace.dto.response.DiaryListResponseDto;
@@ -14,8 +15,10 @@ import com.memorytrace.dto.response.DiarySaveResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
 import com.memorytrace.repository.DiaryRepository;
+import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +40,10 @@ public class DiaryService {
     private final UserBookRepository userBookRepository;
 
     private final BookRepository bookRepository;
+
+    private final FcmTokenRepository fcmTokenRepository;
+
+    private final FirebaseMessagingService firebaseMessagingService;
 
     private final S3Uploder s3Uploder;
 
@@ -64,7 +71,12 @@ public class DiaryService {
     public DiaryDetailResponseDto findByDid(Long did) {
         Diary entity = diaryRepository.findByDid(did)
             .orElseThrow(() -> new IllegalArgumentException(("해당 다이어리가 없습니다. did=" + did)));
-        return new DiaryDetailResponseDto(entity);
+
+        if (LocalDateTime.now().isBefore(entity.getCreatedDate().plusMinutes(30))) {
+            return new DiaryDetailResponseDto(entity, true);
+        }
+
+        return new DiaryDetailResponseDto(entity, false);
     }
 
     @Transactional
@@ -72,19 +84,40 @@ public class DiaryService {
         throws IOException {
         requestDto.setUid(((User) SecurityContextHolder.getContext().getAuthentication()
             .getPrincipal()).getUid());
+
         userBookRepository
             .findByBidAndUidAndIsWithdrawal(requestDto.getBid(), requestDto.getUid(), (byte) 0)
             .orElseThrow(() -> new IllegalArgumentException("해당 교환일기에 참여하고 있지 않은 유저입니다. "
                 + "bid=" + requestDto.getBid() + ", uid=" + requestDto.getUid()));
 
-        bookRepository.findByBidAndUser_Uid(requestDto.getBid(), requestDto.getUid())
+        Book book = bookRepository.findByBidAndUser_Uid(requestDto.getBid(), requestDto.getUid())
             .orElseThrow(() -> new IllegalArgumentException(
                 "현재 교환일기 작성 차례인 유저가 아닙니다. uid=" + requestDto.getUid()));
         String imgUrl = file == null ? null : s3Uploder.upload(file, "diary");
         try {
-            updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
+            User nextUser = updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
 
             Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
+
+            // 자신 제외 나머지 사람들에게 알람
+            firebaseMessagingService.sendMulticast(
+                Message.builder().subject(book.getTitle())
+                    .content("새로운 글이 등록되었어요!")
+                    .data(book).build(),
+                fcmTokenRepository.findTokenBidAndUidNotInMe(book.getBid(), requestDto.getUid()));
+
+            List<String> allTokens = fcmTokenRepository.findByUser_Uid(nextUser.getUid()).stream()
+                .map(fcmToken -> fcmToken.getToken())
+                .collect(Collectors.toList());
+
+            // 자기 차례인 사람에게 알람
+            if (requestDto.getUid() != nextUser.getUid()) {
+                firebaseMessagingService.sendMulticast(
+                    Message.builder().subject(book.getTitle())
+                        .content(nextUser.getNickname() + "님의 일기 작성 차례가 돌아왔어요!")
+                        .data(book)
+                        .build(), allTokens);
+            }
 
             return new DiarySaveResponseDto(diary);
         } catch (Exception e) {
@@ -94,7 +127,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public void updateWhoseTurnNo(Long bid, Long uid) {
+    public User updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
             .ofNullable(userBookRepository.findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0))
@@ -114,6 +147,8 @@ public class DiaryService {
                 () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
 
             book.updateWhoseTurnBook(bid, userBookList.get(index).getUser());
+
+            return userBookList.get(index).getUser();
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
             throw new MemoryTraceException();
@@ -134,5 +169,4 @@ public class DiaryService {
             throw new MemoryTraceException();
         }
     }
-
 }
