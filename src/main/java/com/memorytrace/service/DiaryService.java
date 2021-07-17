@@ -102,7 +102,8 @@ public class DiaryService {
             // 자신 제외 나머지 사람들에게 알람
             firebaseMessagingService.sendMulticast(
                 Message.builder().subject(book.getTitle())
-                    .content("새로운 글이 등록되었어요!").build(),
+                    .content("새로운 글이 등록되었어요!")
+                    .data(book).build(),
                 fcmTokenRepository.findTokenBidAndUidNotInMe(book.getBid(), requestDto.getUid()));
 
             List<String> allTokens = fcmTokenRepository.findByUser_Uid(nextUser.getUid()).stream()
@@ -114,6 +115,7 @@ public class DiaryService {
                 firebaseMessagingService.sendMulticast(
                     Message.builder().subject(book.getTitle())
                         .content(nextUser.getNickname() + "님의 일기 작성 차례가 돌아왔어요!")
+                        .data(book)
                         .build(), allTokens);
             }
 
