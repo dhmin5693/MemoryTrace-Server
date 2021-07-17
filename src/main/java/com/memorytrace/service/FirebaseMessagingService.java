@@ -20,6 +20,10 @@ public class FirebaseMessagingService {
 
     public void sendMulticast(Message message, List<String> tokens)
         throws FirebaseMessagingException {
+        if (tokens.isEmpty()) {
+            return;
+        }
+
         Notification notification = Notification
             .builder()
             .setTitle(message.getSubject())
