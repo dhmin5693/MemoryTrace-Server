@@ -91,9 +91,9 @@ public class UserController {
             DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FCM token 저장")
+    @ApiOperation(value = "기존 회원을 위한 FCM token 저장")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "FCM token 저장 완료")
+        @ApiResponse(code = 201, message = "기존 회원을 위한 FCM token 저장 완료")
     })
     @PostMapping("/fcm")
     public ResponseEntity<DefaultRes<FcmSaveRequestDto>> save(
