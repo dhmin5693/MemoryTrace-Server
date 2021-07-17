@@ -24,8 +24,12 @@ public class UserSaveRequestDto {
     private String snsKey;
 
     @NotNull(message = "sns type은 필수입니다.")
-    @ApiModelProperty(position = 2, required = true, dataType = "SnsType", allowableValues = "GOOGLE, KAKAO, APPLE", value = "SNS TYPE : GOOGLE, KAKAO, APPLE")
+    @ApiModelProperty(position = 3, required = true, dataType = "SnsType", allowableValues = "GOOGLE, KAKAO, APPLE", value = "SNS TYPE : GOOGLE, KAKAO, APPLE")
     private SnsType snsType;
+
+    @NotNull(message = "token은 필수입니다.")
+    @ApiModelProperty(position = 4, required = true, dataType = "String", value = "FCM Token")
+    private String token;
 
     private String profileImg;
 
