@@ -3,10 +3,12 @@ package com.memorytrace.controller;
 import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
+import com.memorytrace.dto.request.FcmDeleteRequestDto;
 import com.memorytrace.dto.request.FcmSaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
 import com.memorytrace.dto.response.UserDetailResponseDto;
+import com.memorytrace.service.FcmService;
 import com.memorytrace.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+
+    private final FcmService fcmService;
 
     @ApiOperation(value = "사용자 생성")
     @ApiResponses(value = {
@@ -83,6 +87,7 @@ public class UserController {
     @GetMapping("/withdrawal")
     public ResponseEntity<DefaultRes> withdraw() {
         userService.withdraw();
+        fcmService.deleteAllTokens();
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
     }

@@ -19,4 +19,6 @@ public interface FcmTokenRepository extends JpaRepository<FcmToken, Long> {
     List<String> findTokenBidAndUidNotInMe(@Param("bid") Long bid, @Param("uid") Long uid);
 
     List<FcmToken> findByTokenAndUser_uid(String token, Long uid);
+
+    List<FcmToken> findByUser_uid(Long uid);
 }
