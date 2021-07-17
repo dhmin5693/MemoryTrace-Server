@@ -3,7 +3,6 @@ package com.memorytrace.controller;
 import com.memorytrace.common.ResponseMessage;
 import com.memorytrace.common.StatusCode;
 import com.memorytrace.domain.DefaultRes;
-import com.memorytrace.dto.request.FcmDeleteRequestDto;
 import com.memorytrace.dto.request.FcmSaveRequestDto;
 import com.memorytrace.dto.request.UserSaveRequestDto;
 import com.memorytrace.dto.request.UserUpdateRequestDto;
@@ -101,7 +100,7 @@ public class UserController {
         @RequestBody @Valid FcmSaveRequestDto request) {
         userService.fcmSave(request);
         return new ResponseEntity(
-            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER), HttpStatus.CREATED);
+            DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_TOKEN), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
