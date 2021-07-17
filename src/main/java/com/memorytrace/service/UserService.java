@@ -100,8 +100,10 @@ public class UserService {
     }
 
     @Transactional
-    public FcmToken fcmSave(FcmSaveRequestDto request) {
-        return fcmTokenRepository.save(request.toEntity());
+    public void fcmSave(FcmSaveRequestDto request) {
+        if (request.getToken() != null) {
+            fcmTokenRepository.save(request.toEntity());
+        }
     }
 
     @Transactional(readOnly = true)
