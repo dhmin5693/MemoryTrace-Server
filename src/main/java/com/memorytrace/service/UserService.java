@@ -36,6 +36,11 @@ public class UserService {
         if (user == null) {
             return null;
         }
+        if (fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid())
+            .isEmpty()) {
+            fcmTokenRepository
+                .save(FcmToken.builder().user(user).token(request.getToken()).build());
+        }
         String jwt = jwtTokenProvider.createToken(request.getSnsKey());
         return new UserDetailResponseDto(user, jwt);
     }
@@ -44,7 +49,12 @@ public class UserService {
     public UserDetailResponseDto save(UserSaveRequestDto request) {
         try {
             String jwt = jwtTokenProvider.createToken(request.getSnsKey());
-            return new UserDetailResponseDto(userRepository.save(request.toEntity()), jwt);
+            User user = userRepository.save(request.toEntity());
+            fcmTokenRepository.save(FcmToken.builder()
+                .user(user)
+                .token(request.getToken())
+                .build());
+            return new UserDetailResponseDto(user, jwt);
         } catch (Exception e) {
             log.error("유저 저장 중 에러발생", e);
             throw new MemoryTraceException();
