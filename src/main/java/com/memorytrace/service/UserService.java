@@ -36,6 +36,11 @@ public class UserService {
         if (user == null) {
             return null;
         }
+        if (fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid())
+            .isEmpty()) {
+            fcmTokenRepository
+                .save(FcmToken.builder().user(user).token(request.getToken()).build());
+        }
         String jwt = jwtTokenProvider.createToken(request.getSnsKey());
         return new UserDetailResponseDto(user, jwt);
     }
