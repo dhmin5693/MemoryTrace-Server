@@ -69,7 +69,8 @@ public class InviteService {
             // TODO: 자신 제외 나머지 사람들에게 초대사람 완료 알림
             firebaseMessagingService.sendMulticast(
                 Message.builder().subject(book.getTitle())
-                    .content("새로운 멤버 "+ user.getNickname() + "님을 환영해주세요! ").build(),
+                    .content("새로운 멤버 "+ user.getNickname() + "님을 환영해주세요! ")
+                    .data(book).build(),
                 fcmTokenRepository.findTokenBidAndUidNotInMe(book.getBid(), uid));
         } catch (Exception e) {
             log.error("초대한 멤버 저장 중 에러발생", e);
