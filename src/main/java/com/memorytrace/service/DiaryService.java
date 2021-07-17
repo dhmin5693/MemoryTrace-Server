@@ -18,6 +18,8 @@ import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,7 +72,12 @@ public class DiaryService {
     public DiaryDetailResponseDto findByDid(Long did) {
         Diary entity = diaryRepository.findByDid(did)
             .orElseThrow(() -> new IllegalArgumentException(("해당 다이어리가 없습니다. did=" + did)));
-        return new DiaryDetailResponseDto(entity);
+
+        if (LocalDateTime.now().isBefore(entity.getCreatedDate().plusMinutes(30))) {
+            return new DiaryDetailResponseDto(entity, true);
+        }
+
+        return new DiaryDetailResponseDto(entity, false);
     }
 
     @Transactional

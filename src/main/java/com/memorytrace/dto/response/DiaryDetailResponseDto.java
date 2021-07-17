@@ -16,27 +16,35 @@ public class DiaryDetailResponseDto {
     @ApiModelProperty(position = 1, required = true, value = "일기 고유 아이디")
     private Long did;
 
-    @ApiModelProperty(position = 2, required = true, value = "일기 작성자 닉네임")
+    @ApiModelProperty(position = 2, required = true, value = "일기 작성자 uid")
+    private Long uid;
+
+    @ApiModelProperty(position = 3, required = true, value = "일기 작성자 닉네임")
     private String nickname;
 
-    @ApiModelProperty(position = 3, required = true, value = "일기 제목")
+    @ApiModelProperty(position = 4, required = true, value = "일기 제목")
     private String title;
 
-    @ApiModelProperty(position = 4, required = true, value = "일기 첨부 이미지")
+    @ApiModelProperty(position = 5, required = true, value = "일기 첨부 이미지")
     private String img;
 
-    @ApiModelProperty(position = 5, required = true, value = "일기 내용")
+    @ApiModelProperty(position = 6, required = true, value = "일기 내용")
     private String content;
 
-    @ApiModelProperty(position = 6, required = true, value = "일기 속지 템플릿(default = 0)")
+    @ApiModelProperty(position = 7, required = true, value = "일기 수정 가능 여부")
+    private boolean isModifiable;
+
+    @ApiModelProperty(position = 8, required = true, value = "일기 속지 템플릿(default = 0)")
     private Byte template;
 
-    @ApiModelProperty(position = 7, required = true, value = "작성 시간")
+    @ApiModelProperty(position = 9, required = true, value = "작성 시간")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    public DiaryDetailResponseDto(Diary entity) {
+    public DiaryDetailResponseDto(Diary entity, boolean isModifiable) {
         this.did = entity.getDid();
+        this.uid = entity.getUser().getUid();
+        this.isModifiable = isModifiable;
         this.nickname = entity.getUser().getNickname();
         this.title = entity.getTitle();
         this.img = entity.getImg();
