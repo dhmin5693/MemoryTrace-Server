@@ -18,7 +18,6 @@ import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -100,7 +99,7 @@ public class DiaryService {
 
             Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
 
-            // TODO: 자신 제외 나머지 사람들에게 알람
+            // 자신 제외 나머지 사람들에게 알람
             firebaseMessagingService.sendMulticast(
                 Message.builder().subject(book.getTitle())
                     .content("새로운 글이 등록되었어요!").build(),
@@ -110,10 +109,13 @@ public class DiaryService {
                 .map(fcmToken -> fcmToken.getToken())
                 .collect(Collectors.toList());
 
-            // TODO: 메시지
-            firebaseMessagingService.sendMulticast(
-                Message.builder().subject(book.getTitle()).content(nextUser.getNickname() + "님의 일기 작성 차례가 돌아왔어요!")
-                    .build(), allTokens);
+            // 자기 차례인 사람에게 알람
+            if (requestDto.getUid() != nextUser.getUid()) {
+                firebaseMessagingService.sendMulticast(
+                    Message.builder().subject(book.getTitle())
+                        .content(nextUser.getNickname() + "님의 일기 작성 차례가 돌아왔어요!")
+                        .build(), allTokens);
+            }
 
             return new DiarySaveResponseDto(diary);
         } catch (Exception e) {
