@@ -15,10 +15,17 @@ import org.springframework.stereotype.Service;
 public class FcmService {
     private final FcmTokenRepository fcmTokenRepository;
 
-    public void deletFcmToken(String token) {
+    public void deleteByFcmToken(String token) {
         Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
             .getPrincipal()).getUid();
         List<FcmToken> fcmTokenList = fcmTokenRepository.findByTokenAndUser_uid(token, uid);
+        fcmTokenRepository.deleteAll(fcmTokenList);
+    }
+
+    public void deleteAllTokens() {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+        List<FcmToken> fcmTokenList = fcmTokenRepository.findByUser_uid(uid);
         fcmTokenRepository.deleteAll(fcmTokenList);
     }
 }

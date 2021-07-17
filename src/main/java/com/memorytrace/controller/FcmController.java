@@ -32,7 +32,7 @@ public class FcmController {
     })
     @DeleteMapping
     public ResponseEntity<DefaultRes> delete(@RequestBody @Valid FcmDeleteRequestDto request) {
-        fcmService.deletFcmToken(request.getToken());
+        fcmService.deleteByFcmToken(request.getToken());
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_TOKEN), HttpStatus.OK);
     }
