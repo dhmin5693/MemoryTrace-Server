@@ -32,7 +32,7 @@ public class FirebaseMessagingService {
 
     public void sendMulticast(Message message, List<String> tokens)
         throws FirebaseMessagingException {
-        if (tokens.isEmpty()) {
+        if (tokens != null) {
             return;
         }
 
