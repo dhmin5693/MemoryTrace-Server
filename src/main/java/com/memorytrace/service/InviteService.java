@@ -55,7 +55,7 @@ public class InviteService {
             List<UserBook> userBook = userBookRepository
                 .findByBidAndIsWithdrawalOrderByTurnNo(book.getBid(), (byte) 0);
 
-            final int nowTurn = userBook.size();
+            final int nowTurn = (userBook.get(userBook.size() - 1).getTurnNo()) + 1;
 
             userBookRepository.save(UserBook.builder()
                 .bid(book.getBid())
@@ -69,7 +69,7 @@ public class InviteService {
             // TODO: 자신 제외 나머지 사람들에게 초대사람 완료 알림
             firebaseMessagingService.sendMulticast(
                 Message.builder().subject(book.getTitle())
-                    .content("새로운 멤버 "+ user.getNickname() + "님을 환영해주세요! ")
+                    .content("새로운 멤버 " + user.getNickname() + "님을 환영해주세요! ")
                     .data(book).build(),
                 fcmTokenRepository.findTokenBidAndUidNotInMe(book.getBid(), uid));
         } catch (Exception e) {
