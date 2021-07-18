@@ -28,7 +28,7 @@ public class FirebaseMessagingService {
         data.put("nickname", book.getUser().getNickname());
         data.put("title", book.getTitle());
         data.put("bgColor", book.getBgColor().toString());
-        data.put("stickerImg", book.getStickerImg());
+        data.put("stickerImg", book.getStickerImg() != null ? book.getStickerImg() : "null");
         data.put("modifiedDate", book.getModifiedDate().toString().replace('T', ' '));
 
         return data;
