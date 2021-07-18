@@ -22,12 +22,16 @@ public class FirebaseMessagingService {
     private final FirebaseMessaging firebaseMessaging;
 
     private Map<String, String> convertToMap(Book book) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> data = new HashMap<>();
 
-        map.put("bid", book.getBid().toString());
-        map.put("title", book.getTitle());
+        data.put("bid", book.getBid().toString());
+        data.put("nickname", book.getUser().getNickname());
+        data.put("title", book.getTitle());
+        data.put("bgColor", book.getBgColor().toString());
+        data.put("stickerImg", book.getStickerImg());
+        data.put("modifiedDate", book.getModifiedDate().toString().replace('T', ' '));
 
-        return map;
+        return data;
     }
 
     public void sendMulticast(Message message, List<String> tokens)
@@ -50,7 +54,6 @@ public class FirebaseMessagingService {
             .build();
 
         BatchResponse response = firebaseMessaging.sendMulticast(multicastMessage);
-
         log.info(response.getSuccessCount() + " messages were sent successfully");
     }
 }
