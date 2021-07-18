@@ -37,8 +37,7 @@ public class UserService {
             return null;
         }
         if (request.getToken() != null &&
-            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid())
-                .isEmpty()) {
+            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid()) == null) {
             fcmTokenRepository
                 .save(FcmToken.builder().user(user).token(request.getToken()).build());
         }
@@ -101,7 +100,11 @@ public class UserService {
 
     @Transactional
     public void fcmSave(FcmSaveRequestDto request) {
-        if (request.getToken() != null) {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+        if (request.getToken() != null && fcmTokenRepository
+            .findByTokenAndUser_uid(request.getToken(), uid)
+            .isEmpty()) {
             fcmTokenRepository.save(request.toEntity());
         }
     }
