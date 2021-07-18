@@ -79,7 +79,7 @@ public class DiaryController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "일기 수정 성공")
     })
-    @PutMapping("/{did}")
+    @PostMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> updateDiary(
         @ModelAttribute @Valid DiaryUpdateRequestDto requestDto,
         @RequestPart(value = "img", required = false) MultipartFile file) {
