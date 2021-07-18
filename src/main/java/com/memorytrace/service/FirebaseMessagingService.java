@@ -32,7 +32,8 @@ public class FirebaseMessagingService {
 
     public void sendMulticast(Message message, List<String> tokens)
         throws FirebaseMessagingException {
-        if (tokens == null) {
+        if (tokens == null || tokens.size() == 0) {
+            log.info("토큰 한 개 이상은 존재 해야합니다.");
             return;
         }
 
