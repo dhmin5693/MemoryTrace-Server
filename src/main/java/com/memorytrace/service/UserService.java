@@ -78,41 +78,61 @@ public class UserService {
 
     @Transactional
     public UserDetailResponseDto updateNickname(HttpHeaders headers, UserUpdateRequestDto request) {
-        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal()).getUid();
-        User user = userRepository.findById(uid)
-            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
-        user.updateNickname(request.getNickname());
-        return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal()).getUid();
+            User user = userRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+            user.updateNickname(request.getNickname());
+            return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
+        } catch (Exception e) {
+            log.error("닉네임 수정 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
     }
 
     @Transactional
     public Long withdraw() {
-        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal()).getUid();
-        User user = userRepository.findById(uid)
-            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
-        userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0).stream()
-            .forEach(ub -> bookService.exitBook(ub.getBid()));
-        user.withdraw();
-        return uid;
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal()).getUid();
+            User user = userRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+            userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0).stream()
+                .forEach(ub -> bookService.exitBook(ub.getBid()));
+            user.withdraw();
+            return uid;
+        } catch (Exception e) {
+            log.error("회원 탈퇴 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
     }
 
     @Transactional
     public void fcmSave(FcmSaveRequestDto request) {
-        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal()).getUid();
-        if (request.getToken() != null && fcmTokenRepository
-            .findByTokenAndUser_uid(request.getToken(), uid)
-            .isEmpty()) {
-            fcmTokenRepository.save(request.toEntity());
+        try {
+            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal()).getUid();
+            if (request.getToken() != null && fcmTokenRepository
+                .findByTokenAndUser_uid(request.getToken(), uid)
+                .isEmpty()) {
+                fcmTokenRepository.save(request.toEntity());
+            }
+        } catch (Exception e) {
+            log.error("FCM 토큰 저장 중 에러발생", e);
+            throw new MemoryTraceException();
         }
     }
 
     @Transactional(readOnly = true)
     public String getToken(Long uid) {
-        User user = userRepository.findByUid(uid).orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 uid입니다. uid=" + uid));
-        return jwtTokenProvider.createToken(user.getSnsKey());
+        try {
+            User user = userRepository.findByUid(uid).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 uid입니다. uid=" + uid));
+            return jwtTokenProvider.createToken(user.getSnsKey());
+        } catch (Exception e) {
+            log.error("회원 탈퇴 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
     }
 }
