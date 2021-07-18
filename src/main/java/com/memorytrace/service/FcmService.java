@@ -2,6 +2,7 @@ package com.memorytrace.service;
 
 import com.memorytrace.domain.FcmToken;
 import com.memorytrace.domain.User;
+import com.memorytrace.dto.request.FcmDeleteRequestDto;
 import com.memorytrace.repository.FcmTokenRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,8 @@ import org.springframework.stereotype.Service;
 public class FcmService {
     private final FcmTokenRepository fcmTokenRepository;
 
-    public void deleteByFcmToken(String token) {
-        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal()).getUid();
-        List<FcmToken> fcmTokenList = fcmTokenRepository.findByTokenAndUser_uid(token, uid);
+    public void deleteByFcmToken(FcmDeleteRequestDto requestDto) {
+        List<FcmToken> fcmTokenList = fcmTokenRepository.findByTokenAndUser_uid(requestDto.getToken(), requestDto.getUid());
         fcmTokenRepository.deleteAll(fcmTokenList);
     }
 
