@@ -29,15 +29,16 @@ public class UserService {
     private final FcmTokenRepository fcmTokenRepository;
     private final BookService bookService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDetailResponseDto getExistingUser(UserSaveRequestDto request) {
         request.setSnsKey(request.getSnsType() + "_" + request.getSnsKey());
         User user = userRepository.findBySnsKey(request.getSnsKey()).orElse(null);
         if (user == null) {
             return null;
         }
+
         if (request.getToken() != null &&
-            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid()) == null) {
+            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid()).isEmpty()) {
             fcmTokenRepository
                 .save(FcmToken.builder().user(user).token(request.getToken()).build());
         }
