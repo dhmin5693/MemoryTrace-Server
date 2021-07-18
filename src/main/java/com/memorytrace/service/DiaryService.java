@@ -134,11 +134,10 @@ public class DiaryService {
             .orElseThrow(() -> new IllegalArgumentException("검색 되는 UserBook이 없습니다. bid=" + bid));
 
         try {
-            for (UserBook userBook : userBookList) {
+            for (int i = 0; i < userBookList.size(); i++) {
+                UserBook userBook = userBookList.get(i);
                 if (userBook.getUid() == uid) {
-                    index =
-                        userBook.getTurnNo() == userBookList.size() - 1 ? 0
-                            : userBook.getTurnNo() + 1;
+                    index = i == userBookList.size() - 1 ? 0 : i + 1;
                     break;
                 }
             }
