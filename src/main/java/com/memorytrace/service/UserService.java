@@ -37,8 +37,7 @@ public class UserService {
             return null;
         }
         if (request.getToken() != null &&
-            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid())
-                .isEmpty()) {
+            fcmTokenRepository.findByTokenAndUser_uid(request.getToken(), user.getUid()) == null) {
             fcmTokenRepository
                 .save(FcmToken.builder().user(user).token(request.getToken()).build());
         }
