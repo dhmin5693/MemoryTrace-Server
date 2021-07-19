@@ -137,7 +137,7 @@ public class DiaryService {
         try {
             for (int i = 0; i < userBookList.size(); i++) {
                 UserBook userBook = userBookList.get(i);
-                if (userBook.getUid() == uid) {
+                if (userBook.getUid().equals(uid)) {
                     index = i == userBookList.size() - 1 ? 0 : i + 1;
                     break;
                 }
