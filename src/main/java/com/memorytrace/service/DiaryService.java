@@ -95,8 +95,7 @@ public class DiaryService {
                 "현재 교환일기 작성 차례인 유저가 아닙니다. uid=" + requestDto.getUid()));
         String imgUrl = file == null ? null : s3Uploder.upload(file, "diary");
         try {
-            User nextUser = getNextUser(requestDto.getBid(), requestDto.getUid());
-            updateWhoseTurn(requestDto.getBid(), requestDto.getUid(), nextUser);
+            User nextUser = updateWhoseTurnNo(requestDto.getBid(), requestDto.getUid());
 
             Diary diary = diaryRepository.save(requestDto.toEntity(imgUrl));
 
@@ -128,7 +127,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public User getNextUser(Long bid, Long uid) {
+    public User updateWhoseTurnNo(Long bid, Long uid) {
         int index = 0;
         List<UserBook> userBookList = Optional
             .ofNullable(userBookRepository.findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0))
@@ -137,28 +136,21 @@ public class DiaryService {
         try {
             for (int i = 0; i < userBookList.size(); i++) {
                 UserBook userBook = userBookList.get(i);
-                if (userBook.getUid() == uid) {
+                if (userBook.getUid().equals(uid)) {
                     index = i == userBookList.size() - 1 ? 0 : i + 1;
                     break;
                 }
             }
 
+            Book book = bookRepository.findByBid(bid).orElseThrow(
+                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
+
+            book.updateWhoseTurnBook(bid, userBookList.get(index).getUser());
+
             return userBookList.get(index).getUser();
         } catch (Exception e) {
             log.error("Whose Turn 수정 중 에러 발생", e);
             throw new MemoryTraceException();
-        }
-    }
-
-    @Transactional
-    public void updateWhoseTurn(Long bid, Long currentUid, User nextUser) {
-        Book book = bookRepository.findByBid(bid).orElseThrow(
-            () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
-
-        if (nextUser.getUid().equals(currentUid)) {
-            book.updateModifiedDate();
-        } else {
-            book.updateWhoseTurnBook(bid, nextUser);
         }
     }
 
