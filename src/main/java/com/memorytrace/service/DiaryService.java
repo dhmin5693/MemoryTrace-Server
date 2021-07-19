@@ -111,7 +111,7 @@ public class DiaryService {
                 .collect(Collectors.toList());
 
             // 자기 차례인 사람에게 알람
-            if (requestDto.getUid() != nextUser.getUid()) {
+            if (!requestDto.getUid().equals(nextUser.getUid())) {
                 firebaseMessagingService.sendMulticast(
                     Message.builder().subject(book.getTitle())
                         .content(nextUser.getNickname() + "님의 일기 작성 차례가 돌아왔어요!")
