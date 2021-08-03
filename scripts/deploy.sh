@@ -34,5 +34,5 @@ chmod +x $JAR_NAME
 echo "> $JAR_NAME 실행"
 
 nohup java -jar \
-    -Dspring.config.location=/home/ubuntu/app/application.properties, /home/ubuntu/app/step1/memory-trace-api/src/main/resources/memorytrace-42402-firebase-adminsdk-cy8br-d235578c23.json \
+    -Dspring.config.location=/home/ubuntu/app/application.properties \
     $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
