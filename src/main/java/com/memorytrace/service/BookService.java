@@ -24,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -80,21 +82,16 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public BookDetailResponseDto findByBid(Long bid) {
-        try {
-            Book book = bookRepository.findByBid(bid).orElseThrow(
-                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + bid));
+    public BookDetailResponseDto findByBid(Long bid) throws MethodArgumentNotValidException {
+        Book book = bookRepository.findByBid(bid).orElseThrow(
+            () -> new MethodArgumentNotValidException(null, new BeanPropertyBindingResult(bid, "검색 되는 책이 없습니다. bid=" + bid)));
 
-            List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
-                .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
-                .map(ub -> new BookDetailResponseDto().new UsersInBook(ub))
-                .collect(Collectors.toList());
+        List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
+            .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
+            .map(ub -> new BookDetailResponseDto().new UsersInBook(ub))
+            .collect(Collectors.toList());
 
-            return new BookDetailResponseDto(book, userList);
-        } catch (Exception e) {
-            log.error("교환일기 조회 중 에러발생", e);
-            throw new MemoryTraceException();
-        }
+        return new BookDetailResponseDto(book, userList);
     }
 
     @Transactional
@@ -112,7 +109,6 @@ public class BookService {
             throw new MemoryTraceException();
         }
     }
-
     @Transactional
     public void exitBook(Long bid) {
         try {
