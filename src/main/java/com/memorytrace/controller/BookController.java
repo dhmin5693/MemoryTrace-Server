@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,7 +85,7 @@ public class BookController {
         @ApiResponse(code = 200, message = "일기장 설정 조회 성공")
     })
     @GetMapping("/{bid}")
-    public ResponseEntity<DefaultRes<BookDetailResponseDto>> findBybid(@PathVariable Long bid) {
+    public ResponseEntity<DefaultRes<BookDetailResponseDto>> findBybid(@PathVariable Long bid) throws MethodArgumentNotValidException {
         BookDetailResponseDto book = bookService.findByBid(bid);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_BOOK_DETAIL, book), HttpStatus.OK);

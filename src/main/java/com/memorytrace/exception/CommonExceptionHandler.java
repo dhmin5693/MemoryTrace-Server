@@ -32,7 +32,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(400).body(
             new DefalutErrorRes(LocalDateTime.now(), StatusCode.BAD_REQUEST,
-                ex.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+                ex.getBindingResult().getObjectName()));
     }
 
     @Override
