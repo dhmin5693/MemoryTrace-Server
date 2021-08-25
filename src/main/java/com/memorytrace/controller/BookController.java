@@ -62,7 +62,7 @@ public class BookController {
     @PostMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> update(@ModelAttribute @Valid BookUpdateRequestDto requestDto,
         @RequestPart(value = "stickerImg", required = false) MultipartFile file)
-        throws IOException {
+        throws IOException, MethodArgumentNotValidException {
         bookService.update(requestDto, file);
         return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_BOOK),
             HttpStatus.OK);

@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class InviteController {
     })
     @PostMapping
     // TODO: 토큰 방식으로 추후 수정될 수 있음
-    public ResponseEntity<DefaultRes> invite(@RequestBody @Valid InviteSaveRequestDto request) {
+    public ResponseEntity<DefaultRes> invite(@RequestBody @Valid InviteSaveRequestDto request) throws MethodArgumentNotValidException {
         inviteService.save(request);
         return new ResponseEntity<>(DefaultRes.res(StatusCode.CREATED, ResponseMessage.INVITE_MEMBER),
             HttpStatus.CREATED);

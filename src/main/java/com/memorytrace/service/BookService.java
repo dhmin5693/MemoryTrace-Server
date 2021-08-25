@@ -84,31 +84,38 @@ public class BookService {
     @Transactional(readOnly = true)
     public BookDetailResponseDto findByBid(Long bid) throws MethodArgumentNotValidException {
         Book book = bookRepository.findByBid(bid).orElseThrow(
-            () -> new MethodArgumentNotValidException(null, new BeanPropertyBindingResult(bid, "검색 되는 책이 없습니다. bid=" + bid)));
+            () -> new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(bid, "검색 되는 일기장이 없습니다. bid=" + bid)));
 
-        List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
-            .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
-            .map(ub -> new BookDetailResponseDto().new UsersInBook(ub))
-            .collect(Collectors.toList());
+        try {
+            List<BookDetailResponseDto.UsersInBook> userList = userBookRepository
+                .findByBidAndIsWithdrawalOrderByTurnNo(bid, (byte) 0).stream()
+                .map(ub -> new BookDetailResponseDto().new UsersInBook(ub))
+                .collect(Collectors.toList());
 
-        return new BookDetailResponseDto(book, userList);
+            return new BookDetailResponseDto(book, userList);
+        } catch (Exception e) {
+            log.error("교환일기 조회 중 에러발생", e);
+            throw new MemoryTraceException();
+        }
     }
 
     @Transactional
     public void update(BookUpdateRequestDto requestDto, MultipartFile file)
-        throws IOException {
+        throws IOException, MethodArgumentNotValidException {
         String imgUrl = file == null ? null : s3Uploder.upload(file, "book");
-
+        Book book = bookRepository.findByBid(requestDto.getBid()).orElseThrow(
+            () -> new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(requestDto.getBid(),
+                    "검색 되는 일기장이 없습니다. bid=" + requestDto.getBid())));
         try {
-            Book book = bookRepository.findByBid(requestDto.getBid()).orElseThrow(
-                () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + requestDto.getBid()));
-
             book.update(requestDto, imgUrl);
         } catch (Exception e) {
             log.error("교환일기 수정 중 에러발생", e);
             throw new MemoryTraceException();
         }
     }
+
     @Transactional
     public void exitBook(Long bid) {
         try {

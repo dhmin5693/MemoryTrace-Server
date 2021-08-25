@@ -17,6 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @Slf4j
@@ -65,12 +67,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDetailResponseDto findById(HttpHeaders headers) {
+    public UserDetailResponseDto findById(HttpHeaders headers) throws MethodArgumentNotValidException {
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal()).getUid();
+
+        User user = userRepository.findById(uid)
+            .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(uid,
+                    "해당 유저가 없습니다. uid =" + uid)));
         try {
-            Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal()).getUid();
-            User user = userRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
             return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
         } catch (Exception e) {
             throw new MemoryTraceException();
@@ -78,12 +83,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserDetailResponseDto updateNickname(HttpHeaders headers, UserUpdateRequestDto request) {
-        try {
+    public UserDetailResponseDto updateNickname(HttpHeaders headers, UserUpdateRequestDto request) throws MethodArgumentNotValidException {
+
             Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal()).getUid();
             User user = userRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+                .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                    new BeanPropertyBindingResult(uid,
+                        "해당 유저가 없습니다. uid =" + uid)));
+        try {
             user.updateNickname(request.getNickname());
             return new UserDetailResponseDto(user, headers.get("Authorization").get(0));
         } catch (Exception e) {
@@ -93,12 +101,14 @@ public class UserService {
     }
 
     @Transactional
-    public Long withdraw() {
-        try {
+    public Long withdraw() throws MethodArgumentNotValidException {
             Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal()).getUid();
             User user = userRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. uid=" + uid));
+                .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                    new BeanPropertyBindingResult(uid,
+                        "해당 유저가 없습니다. uid =" + uid)));
+        try {
             userBookRepository.findByUidAndIsWithdrawal(uid, (byte) 0).stream()
                 .forEach(ub -> bookService.exitBook(ub.getBid()));
             user.withdraw();
@@ -126,10 +136,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public String getToken(Long uid) {
+    public String getToken(Long uid) throws MethodArgumentNotValidException {
+            User user = userRepository.findById(uid)
+                .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                    new BeanPropertyBindingResult(uid,
+                        "해당 유저가 없습니다. uid =" + uid)));
         try {
-            User user = userRepository.findByUid(uid).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 uid입니다. uid=" + uid));
             return jwtTokenProvider.createToken(user.getSnsKey());
         } catch (Exception e) {
             log.error("회원 탈퇴 중 에러발생", e);

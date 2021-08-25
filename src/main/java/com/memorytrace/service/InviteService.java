@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @Slf4j
@@ -34,21 +36,25 @@ public class InviteService {
     private final FirebaseMessagingService firebaseMessagingService;
 
     @Transactional
-    public void save(InviteSaveRequestDto request) {
+    public void save(InviteSaveRequestDto request) throws MethodArgumentNotValidException {
         Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
             .getPrincipal()).getUid();
 
         User user = userRepository.findByUid(uid)
-            .orElseThrow(() -> new IllegalArgumentException(
-                "유효하지 않는 사용자 입니다. uid = " + uid));
+            .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(uid,
+                    "유효하지 않는 사용자 입니다. uid = " + uid)));
 
         Book book = Optional.ofNullable(bookRepository.findByInviteCode(request.getInviteCode()))
-            .orElseThrow(() -> new IllegalArgumentException(
-                "유효하지 않는 초대코드 입니다. 다시 시도해주세요."));
+            .orElseThrow(() -> new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(request.getInviteCode(),
+                    "유효하지 않는 초대코드 입니다. 다시 시도해주세요.")));
 
         if (userBookRepository.findByBidAndUidAndIsWithdrawal(book.getBid(), uid, (byte) 0)
             .isPresent()) {
-            throw new IllegalArgumentException("해당 교환일기에 이미 참여하고 있는 중입니다. ");
+            throw new MethodArgumentNotValidException(null,
+                new BeanPropertyBindingResult(request.getInviteCode(),
+                    "해당 교환일기에 이미 참여하고 있는 중입니다. "));
         }
 
         try {
