@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +62,7 @@ public class UserController {
     })
     @GetMapping
     public ResponseEntity<DefaultRes<UserDetailResponseDto>> findById(
-        @RequestHeader HttpHeaders headers) {
+        @RequestHeader HttpHeaders headers) throws MethodArgumentNotValidException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_DETAIL,
                 userService.findById(headers)), HttpStatus.OK);
@@ -73,7 +74,8 @@ public class UserController {
     })
     @PutMapping
     public ResponseEntity<DefaultRes<UserDetailResponseDto>> updateNickname(
-        @RequestHeader HttpHeaders headers, @RequestBody @Valid UserUpdateRequestDto request) {
+        @RequestHeader HttpHeaders headers, @RequestBody @Valid UserUpdateRequestDto request)
+        throws MethodArgumentNotValidException {
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_USER_NICKNAME,
                 userService.updateNickname(headers, request)), HttpStatus.OK);
@@ -84,7 +86,7 @@ public class UserController {
         @ApiResponse(code = 200, message = "사용자 탈퇴 완료")
     })
     @GetMapping("/withdrawal")
-    public ResponseEntity<DefaultRes> withdraw() {
+    public ResponseEntity<DefaultRes> withdraw() throws MethodArgumentNotValidException {
         userService.withdraw();
         fcmService.deleteAllTokens();
         return new ResponseEntity(
@@ -105,7 +107,8 @@ public class UserController {
 
     @ApiOperation(value = "스웨거로 테스트 시 jwt 조회하는 API")
     @GetMapping("/jwt/{uid}")
-    public ResponseEntity<String> getToken(@PathVariable Long uid) {
+    public ResponseEntity<String> getToken(@PathVariable Long uid)
+        throws MethodArgumentNotValidException {
         String jwt = userService.getToken(uid);
         return ResponseEntity.ok().body(jwt);
     }
