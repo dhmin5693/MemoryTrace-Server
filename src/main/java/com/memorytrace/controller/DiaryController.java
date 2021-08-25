@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,7 @@ public class DiaryController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes<DiarySaveResponseDto>> save(
         @ModelAttribute @Valid DiarySaveRequestDto requestDto,
-        @RequestPart(value = "img", required = false) MultipartFile file) throws IOException {
+        @RequestPart(value = "img", required = false) MultipartFile file) throws IOException, MethodArgumentNotValidException {
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_DIARY,
                 diaryService.save(requestDto, file)), HttpStatus.CREATED);
@@ -56,7 +57,7 @@ public class DiaryController {
     })
     @GetMapping("/list/{bid}")
     public ResponseEntity<DefaultRes<DiaryListResponseDto>> findByBook_Bid(
-        @PathVariable Long bid, PageRequestDto pageRequestDto) {
+        @PathVariable Long bid, PageRequestDto pageRequestDto) throws MethodArgumentNotValidException {
         DiaryListResponseDto diaryList = diaryService.findByBook_Bid(bid, pageRequestDto);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_LIST, diaryList),
@@ -68,7 +69,7 @@ public class DiaryController {
         @ApiResponse(code = 200, message = "일기 확인 성공")
     })
     @GetMapping("/{did}")
-    public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> findBydid(@PathVariable Long did) {
+    public ResponseEntity<DefaultRes<DiaryDetailResponseDto>> findBydid(@PathVariable Long did) throws MethodArgumentNotValidException {
         DiaryDetailResponseDto diary = diaryService.findByDid(did);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.READ_DIARY_DETAIL, diary), HttpStatus.OK);
@@ -81,7 +82,7 @@ public class DiaryController {
     @PostMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<DefaultRes> updateDiary(
         @ModelAttribute @Valid DiaryUpdateRequestDto requestDto,
-        @RequestPart(value = "img", required = false) MultipartFile file) {
+        @RequestPart(value = "img", required = false) MultipartFile file) throws MethodArgumentNotValidException {
         diaryService.updateDiary(requestDto, file);
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_DIARY), HttpStatus.OK);
