@@ -17,6 +17,6 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String snsKey) throws UsernameNotFoundException {
 
         return userRepository.findBySnsKey(snsKey)
-            .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UsernameNotFoundException("[ "+ snsKey + "] 사용자를 찾을 수 없습니다."));
     }
 }
