@@ -87,8 +87,8 @@ public class UserController {
     })
     @GetMapping("/withdrawal")
     public ResponseEntity<DefaultRes> withdraw() throws MethodArgumentNotValidException {
-        userService.withdraw();
         fcmService.deleteAllTokens();
+        userService.withdraw();
         return new ResponseEntity(
             DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAW_USER), HttpStatus.OK);
     }
