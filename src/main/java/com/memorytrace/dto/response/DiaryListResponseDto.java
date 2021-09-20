@@ -35,7 +35,7 @@ public class DiaryListResponseDto extends PageResponseDto {
         @ApiModelProperty(position = 2, required = true, value = "현재 차례인 닉네임")
         private String nickname;
 
-        @ApiModelProperty(position = 3, required = true, value = "일기 제목")
+        @ApiModelProperty(position = 1, required = true, value = "댓글 작성자 uid")
         private String title;
 
         @ApiModelProperty(position = 4, required = true, value = "일기 이미지")

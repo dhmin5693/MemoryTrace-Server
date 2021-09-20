@@ -4,11 +4,15 @@ import com.memorytrace.domain.Comment;
 import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.dto.request.CommentSaveRequestDto;
+import com.memorytrace.dto.response.CommentListResponseDto;
 import com.memorytrace.dto.response.CommentSaveResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.CommentRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,5 +76,23 @@ public class CommentService {
             log.error("댓글 삭제 중 에러 발생", e);
             throw new MemoryTraceException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentListResponseDto> findByDid(Long did) {
+        List<CommentListResponseDto> commentList = new ArrayList<>();
+        AtomicInteger idx = new AtomicInteger(-1);
+        commentRepository.findByDid(did).stream().forEach(c -> {
+            CommentListResponseDto dto;
+            if (c.getParent() == null) {
+                dto = new CommentListResponseDto(c, new ArrayList<>());
+                commentList.add(dto);
+                idx.set(idx.get() + 1);
+            } else {
+                dto = commentList.get(idx.get());
+                dto.getCommentList().add(new CommentListResponseDto().new CommentList(c));
+            }
+        });
+        return commentList;
     }
 }
