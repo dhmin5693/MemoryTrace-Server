@@ -5,20 +5,15 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @SpringBootApplication
 public class Application {
-
-    @Value("${firebase.sdk.path}")
-    private String firebaseSdkPath;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -26,9 +21,8 @@ public class Application {
 
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        Resource resource = new ClassPathResource(firebaseSdkPath);
         GoogleCredentials googleCredentials = GoogleCredentials
-            .fromStream(resource.getInputStream());
+            .fromStream(new ClassPathResource("memorytrace-42402-firebase-adminsdk-cy8br-d235578c23.json").getInputStream());
         FirebaseOptions firebaseOptions = FirebaseOptions
             .builder()
             .setCredentials(googleCredentials)
