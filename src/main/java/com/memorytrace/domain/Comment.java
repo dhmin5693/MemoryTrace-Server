@@ -42,4 +42,8 @@ public class Comment extends BaseTimeEntity {
         this.diary = diary;
         this.content = content;
     }
+
+    public void delete() {
+        this.content = "삭제된 댓글입니다.";
+    }
 }
