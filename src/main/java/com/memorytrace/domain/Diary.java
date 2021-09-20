@@ -51,6 +51,11 @@ public class Diary extends BaseTimeEntity {
         this.content = content;
     }
 
+    @Builder(builderClassName = "ByDidBuilder", builderMethodName = "ByDidBuilder")
+    public Diary(Long did) {
+        this.did = did;
+    }
+
     public void update(String title, String img, String content) {
         this.title = title;
         this.img = img;
