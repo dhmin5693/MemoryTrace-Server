@@ -41,7 +41,10 @@ public class DiaryDetailResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    public DiaryDetailResponseDto(Diary entity, boolean isModifiable) {
+    @ApiModelProperty(position = 10, required = true, value = "작성된 댓글 개수")
+    private Long commentCnt;
+
+    public DiaryDetailResponseDto(Diary entity, boolean isModifiable, Long commentCnt) {
         this.did = entity.getDid();
         this.uid = entity.getUser().getUid();
         this.isModifiable = isModifiable;
@@ -51,5 +54,6 @@ public class DiaryDetailResponseDto {
         this.content = entity.getContent();
         this.template = entity.getTemplate();
         this.createdDate = entity.getCreatedDate();
+        this.commentCnt = commentCnt;
     }
 }
