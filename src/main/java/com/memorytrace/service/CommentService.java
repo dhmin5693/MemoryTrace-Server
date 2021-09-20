@@ -12,7 +12,6 @@ import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,8 +63,9 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long cid) throws MethodArgumentNotValidException {
         Comment comment = commentRepository
-            .findByCidAndUser_Uid(cid, ((User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal()).getUid()).orElseThrow(
+            .findByCidAndUser_Uid(cid,
+                ((User) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal()).getUid()).orElseThrow(
                 () -> new MethodArgumentNotValidException(null,
                     new BeanPropertyBindingResult(cid, "검색 되는 댓글이 없습니다. cid = " + cid))
             );
@@ -80,19 +80,17 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> findByDid(Long did) {
-        List<CommentListResponseDto> commentList = new ArrayList<>();
-        AtomicInteger idx = new AtomicInteger(-1);
-        commentRepository.findByDid(did).stream().forEach(c -> {
-            CommentListResponseDto dto;
+        List<Comment> commentList = commentRepository.findByDid(did);
+        List<CommentListResponseDto> dtoList = new ArrayList<>();
+        CommentListResponseDto dto = null;
+        for (Comment c : commentList) {
             if (c.getParent() == null) {
-                dto = new CommentListResponseDto(c, new ArrayList<>());
-                commentList.add(dto);
-                idx.set(idx.get() + 1);
+                dtoList.add(new CommentListResponseDto(c, new ArrayList<>()));
+                dto = dtoList.get(dtoList.size() - 1);
             } else {
-                dto = commentList.get(idx.get());
                 dto.getCommentList().add(new CommentListResponseDto().new CommentList(c));
             }
-        });
-        return commentList;
+        }
+        return dtoList;
     }
 }
