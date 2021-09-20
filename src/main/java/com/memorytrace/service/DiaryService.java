@@ -14,6 +14,7 @@ import com.memorytrace.dto.response.DiaryListResponseDto;
 import com.memorytrace.dto.response.DiarySaveResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.BookRepository;
+import com.memorytrace.repository.CommentRepository;
 import com.memorytrace.repository.DiaryRepository;
 import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
@@ -44,6 +45,8 @@ public class DiaryService {
     private final BookRepository bookRepository;
 
     private final FcmTokenRepository fcmTokenRepository;
+
+    private final CommentRepository commentRepository;
 
     private final FirebaseMessagingService firebaseMessagingService;
 
@@ -78,11 +81,13 @@ public class DiaryService {
                 new BeanPropertyBindingResult(did,
                     "해당 다이어리가 없습니다. did=" + did)));
 
+        Long commentCnt = commentRepository.countCommentByDiary_did(did);
+
         if (LocalDateTime.now().isBefore(entity.getCreatedDate().plusMinutes(30))) {
-            return new DiaryDetailResponseDto(entity, true);
+            return new DiaryDetailResponseDto(entity, true, commentCnt);
         }
 
-        return new DiaryDetailResponseDto(entity, false);
+        return new DiaryDetailResponseDto(entity, false, commentCnt);
     }
 
     @Transactional

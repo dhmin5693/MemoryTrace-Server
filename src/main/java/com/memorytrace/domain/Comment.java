@@ -10,10 +10,12 @@ import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -34,11 +36,14 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public Comment(Long cid, Long parent, User user, Diary diary, String content) {
-        this.cid = cid;
-        this.parent = cid;
+    public Comment(Long parent, User user, Diary diary, String content) {
+        this.parent = parent;
         this.user = user;
         this.diary = diary;
         this.content = content;
+    }
+
+    public void delete() {
+        this.content = "삭제된 댓글입니다.";
     }
 }
