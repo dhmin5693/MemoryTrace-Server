@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "Invite User 생성 요청")
 public class InviteSaveRequestDto {
 
-    @NotBlank(message = "초대코드는 필수입니다.")
+    @NotBlank(message = "유효하지 않는 초대코드 입니다. 다시 시도해주세요.")
     @ApiModelProperty(position = 1, required = true, dataType = "String", value = "초대 코드")
     private String inviteCode;
 

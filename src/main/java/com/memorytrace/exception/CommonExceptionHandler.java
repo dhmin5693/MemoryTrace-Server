@@ -29,10 +29,11 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         HttpHeaders headers,
         HttpStatus status,
         WebRequest request) {
-
-        return ResponseEntity.status(400).body(
-            new DefalutErrorRes(LocalDateTime.now(), StatusCode.BAD_REQUEST,
-                ex.getBindingResult().getObjectName()));
+        
+        return ResponseEntity.status(400)
+            .body(new DefalutErrorRes(LocalDateTime.now(), StatusCode.BAD_REQUEST,
+                ex.getBindingResult().hasFieldErrors() ? ex.getBindingResult().getFieldError()
+                    .getDefaultMessage() : ex.getBindingResult().getObjectName()));
     }
 
     @Override

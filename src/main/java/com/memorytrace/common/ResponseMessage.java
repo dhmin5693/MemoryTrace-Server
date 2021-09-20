@@ -24,5 +24,9 @@ public class ResponseMessage {
     public static final String CREATED_TOKEN = "해당 기기 토큰 저장 성공";
     public static final String DELETE_TOKEN = "해당 기기 토큰 삭제 성공";
 
+    public static final String CREATED_COMMENT = "Comment 작성 성공";
+    public static final String DELETE_COMMENT = "Comment 삭제 성공";
+    public static final String READ_COMMENT_LIST = "Comment List 조회 성공";
+
     public static final String INTERNAL_SERVER_ERROR = "서버 처리 중 오류가 발생하였습니다.";
 }
