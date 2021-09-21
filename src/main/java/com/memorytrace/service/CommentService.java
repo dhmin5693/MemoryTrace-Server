@@ -4,14 +4,17 @@ import com.memorytrace.domain.Comment;
 import com.memorytrace.domain.Diary;
 import com.memorytrace.domain.User;
 import com.memorytrace.dto.request.CommentSaveRequestDto;
+import com.memorytrace.dto.request.Message;
 import com.memorytrace.dto.response.CommentListResponseDto;
 import com.memorytrace.dto.response.CommentSaveResponseDto;
 import com.memorytrace.exception.MemoryTraceException;
 import com.memorytrace.repository.CommentRepository;
 import com.memorytrace.repository.DiaryRepository;
+import com.memorytrace.repository.FcmTokenRepository;
 import com.memorytrace.repository.UserBookRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +33,10 @@ public class CommentService {
     private final UserBookRepository userBookRepository;
 
     private final DiaryRepository diaryRepository;
+
+    private final FcmTokenRepository fcmTokenRepository;
+
+    private final FirebaseMessagingService firebaseMessagingService;
 
     @Transactional
     public CommentSaveResponseDto save(CommentSaveRequestDto requestDto)
@@ -52,6 +59,36 @@ public class CommentService {
 
         try {
             Comment comment = commentRepository.save(requestDto.toEntity());
+
+            // 다이어리 작성자와 댓글 작성자가 같으면 알림 X
+            if (!diary.getUser().getUid().equals(requestDto.getUid())) {
+                List<String> diaryWriterToken = fcmTokenRepository
+                    .findByUser_Uid(diary.getUser().getUid()).stream()
+                    .map(fcmToken -> fcmToken.getToken())
+                    .collect(Collectors.toList());
+
+                firebaseMessagingService.sendMulticast(
+                    Message.builder().subject("[댓글]")
+                        .content(requestDto.getContent())
+                        .data(null).build(), diaryWriterToken);
+            }
+
+            // TODO: 대댓글: 다이어리 작성자 + 본 댓 작성자 알림
+            if (requestDto.getParent() != null) {
+                Comment originComment = commentRepository.findByCid(requestDto.getParent());
+
+                if (!originComment.getUser().getUid().equals(requestDto.getUid())) {
+                    List<String> originCommentWriterToken = fcmTokenRepository
+                        .findByUser_Uid(originComment.getUser().getUid()).stream()
+                        .map(fcmToken -> fcmToken.getToken())
+                        .collect(Collectors.toList());
+
+                    firebaseMessagingService.sendMulticast(
+                        Message.builder().subject("[답글]")
+                            .content(requestDto.getContent())
+                            .data(null).build(), originCommentWriterToken);
+                }
+            }
 
             return new CommentSaveResponseDto(comment.getCid());
         } catch (Exception e) {

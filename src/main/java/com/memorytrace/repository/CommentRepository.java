@@ -19,4 +19,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         + "ORDER BY COALESCE(parent, cid), parent IS NOT NULL, cid"
         , nativeQuery = true)
     List<Comment> findByDid(@Param("did") Long did);
+
+    Comment findByCid(Long parent);
 }

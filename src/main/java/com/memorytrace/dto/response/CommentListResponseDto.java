@@ -26,7 +26,10 @@ public class CommentListResponseDto {
     @ApiModelProperty(position = 4, required = true, value = "댓글 작성 시간")
     private String createdDate;
 
-    @ApiModelProperty(position = 5, required = true, value = "대댓글 리스트")
+    @ApiModelProperty(position = 5, required = true, value = "삭제 여부")
+    private Byte isDelete;
+
+    @ApiModelProperty(position = 6, required = true, value = "대댓글 리스트")
     private List<CommentList> commentList = new ArrayList<>();
 
     @Getter
@@ -44,11 +47,15 @@ public class CommentListResponseDto {
         @ApiModelProperty(position = 4, required = true, value = "댓글 작성 시간")
         private String createdDate;
 
+        @ApiModelProperty(position = 5, required = true, value = "삭제 여부")
+        private Byte isDelete;
+
         public CommentList(Comment entity) {
             this.cid = entity.getCid();
             this.nickname = entity.getUser().getNickname();
             this.content = entity.getContent();
             this.createdDate = new PrettyTime().format(entity.getCreatedDate());
+            this.isDelete = entity.getIsDelete();
         }
     }
 
@@ -57,6 +64,7 @@ public class CommentListResponseDto {
         this.nickname = comment.getUser().getNickname();
         this.content = comment.getContent();
         this.createdDate = new PrettyTime().format(comment.getCreatedDate());
+        this.isDelete = comment.getIsDelete();
         this.commentList = commentList;
     }
 }
