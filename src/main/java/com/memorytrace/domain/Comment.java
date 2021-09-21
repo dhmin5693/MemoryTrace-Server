@@ -35,15 +35,20 @@ public class Comment extends BaseTimeEntity {
     @Column(length = 2000)
     private String content;
 
+    @Column(columnDefinition = "TINYINT DEFAULT 0", nullable = false)
+    private Byte isDelete;
+
     @Builder
-    public Comment(Long parent, User user, Diary diary, String content) {
+    public Comment(Long parent, User user, Diary diary, String content, Byte isDelete) {
         this.parent = parent;
         this.user = user;
         this.diary = diary;
         this.content = content;
+        this.isDelete = isDelete;
     }
 
     public void delete() {
         this.content = "삭제된 댓글입니다.";
+        this.isDelete = 1;
     }
 }
