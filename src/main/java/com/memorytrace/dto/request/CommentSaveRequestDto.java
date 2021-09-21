@@ -16,7 +16,7 @@ import lombok.Setter;
 @ApiModel(value = "댓글 작성 요청")
 public class CommentSaveRequestDto {
 
-    @ApiModelProperty(position = 1, dataType = "Long", value = "댓글 작성 시, 0 / 대댓글 작성 시 해당 댓글 고유번호")
+    @ApiModelProperty(position = 1, dataType = "Long", value = "댓글 작성 시, null / 대댓글 작성 시 해당 댓글 고유번호")
     private Long parent;
 
     @NotNull(message = "did는 필수입니다.")

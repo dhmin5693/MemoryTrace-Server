@@ -74,7 +74,7 @@ public class CommentService {
             }
 
             // TODO: 대댓글: 다이어리 작성자 + 본 댓 작성자 알림
-            if (requestDto.getParent() != 0) {
+            if (requestDto.getParent() != null) {
                 Comment originComment = commentRepository.findByCid(requestDto.getParent());
 
                 if (!originComment.getUser().getUid().equals(requestDto.getUid())) {
