@@ -13,16 +13,16 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +39,7 @@ public class CommentController {
         @ApiResponse(code = 201, message = "댓글 작성 성공")
     })
     @PostMapping
-    public ResponseEntity<DefaultRes<CommentSaveResponseDto>> save(CommentSaveRequestDto requestDto)
+    public ResponseEntity<DefaultRes<CommentSaveResponseDto>> save(@RequestBody @Valid CommentSaveRequestDto requestDto)
         throws MethodArgumentNotValidException {
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_COMMENT,
