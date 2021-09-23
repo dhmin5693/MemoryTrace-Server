@@ -99,6 +99,10 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long cid) throws MethodArgumentNotValidException {
+
+        // FEEDBACK 인증 부분은 서비스 레이어에 들어오기 전에 처리해주는게 좋습니다.
+        // 서비스 레이어에서는 비지니스 로직을 다뤄주세요.
+        // HandlerMethodArgumentResolver 를 활용해보세요.
         Comment comment = commentRepository
             .findByCidAndUser_Uid(cid,
                 ((User) SecurityContextHolder.getContext().getAuthentication()
@@ -118,9 +122,19 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> findByDid(Long did) {
         List<Comment> commentList = commentRepository.findByDid(did);
+
+        // FEEDBACK 변수명에는 구현 대상을 정확히 표시하기보다는 은유적으로 표시하시는게 좋아요.
+        // List 로 만들었다가 내용이 바뀌며 set으로 변경하면 변수명도 다 바꿔줘야 하거든요.
+        // dtos 처럼 만들어도 괜찮아 보이네요.
         List<CommentListResponseDto> dtoList = new ArrayList<>();
         CommentListResponseDto dto = null;
         for (Comment c : commentList) {
+
+            // FEEDBACK c.getParent() == null 보다는
+            // c.hasNotParent()를 만든 뒤 호출하여 메시지를 던지는 방식이 좋습니다. 내부 구현을 숨기고 재사용에 원활하거든요.
+            // setter, getter의 사용은 자바 객체를 객체가 아니라 데이터 집합체로 바라보게 만드는 습관을 만듭니다.
+            // 가급적이면 사용하지 않는걸 추천드립니다.
+            // 관련 내용은 객체 지향을 다루는 책에서 확인해보세요 :)
             if (c.getParent() == null) {
                 dtoList.add(new CommentListResponseDto(c, new ArrayList<>()));
                 dto = dtoList.get(dtoList.size() - 1);

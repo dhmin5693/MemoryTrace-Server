@@ -47,6 +47,7 @@ public class S3Uploder {
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
+            // FEEDBACK 여긴 debug에 가까운 내용같은데요??
             log.info("파일이 삭제되었습니다.");
         } else {
             log.info("파일이 삭제되지 못했습니다.");

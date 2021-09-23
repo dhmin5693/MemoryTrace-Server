@@ -23,6 +23,10 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+// FEEDBACK
+// unused import가 존재하네요. sonar lint 같은 도구를 사용하면 코드 정리에 도움이 됩니다.
+// IntelliJ를 활용하는 경우 플러그인으로도 있어요.
+
 @Configuration
 @EnableSwagger2
 @EnableWebMvc

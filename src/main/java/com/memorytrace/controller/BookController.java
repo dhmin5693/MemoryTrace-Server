@@ -84,7 +84,7 @@ public class BookController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "일기장 설정 조회 성공")
     })
-    @GetMapping("/{bid}")
+    @GetMapping("/{bid}") // FEEDBACK 한 라인에 너무 길다 싶으면 엔터를 쳐주세요. 최대 120자 정도가 좋습니다.
     public ResponseEntity<DefaultRes<BookDetailResponseDto>> findBybid(@PathVariable Long bid) throws MethodArgumentNotValidException {
         BookDetailResponseDto book = bookService.findByBid(bid);
         return new ResponseEntity<>(

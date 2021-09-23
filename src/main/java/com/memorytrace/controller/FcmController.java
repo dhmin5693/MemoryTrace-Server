@@ -45,6 +45,8 @@ public class FcmController {
     @PostMapping("/test")
     public ResponseEntity<DefaultRes> message(@RequestBody @Valid FcmDeleteRequestDto request)
         throws FirebaseMessagingException {
+        // FEEDBACK 귀찮더라도 컨트롤러에서는 바로 DB에 접근하지 말아주세요.
+        // 두 단계를 건너뛰고 있습니다. 레이어 침범이 반복되면 코드가 엉키게 돼요.
         Book book = bookRepository.findByBid((long) 1).orElseThrow(
             () -> new IllegalArgumentException("검색 되는 책이 없습니다. bid=" + 1));
         firebaseMessagingService.sendMulticast(

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+// FEEDBACK 약어는 가급적 피하는게 좋습니다.
+// res, cnt 등은 일반적인 경우라서 파악하기는 쉽지만 그런 케이스가 아니라면 코드를 읽기가 힘들어져요.
 @Data
 @AllArgsConstructor
 @Builder

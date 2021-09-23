@@ -34,6 +34,8 @@ public class UserService {
     @Transactional
     public UserDetailResponseDto getExistingUser(UserSaveRequestDto request) {
         request.setSnsKey(request.getSnsType() + "_" + request.getSnsKey());
+
+        // FEEDBACK 받자마자 optional을 벗겨주지 않는게 더 좋을 것 같네요.
         User user = userRepository.findBySnsKey(request.getSnsKey()).orElse(null);
         if (user == null) {
             return null;
@@ -124,6 +126,8 @@ public class UserService {
         try {
             Long uid = ((User) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal()).getUid();
+
+            // FEEDBACK token이 필수값이면 컨트롤러에서 validate를 수행하는게 더 맞습니다.
             if (request.getToken() != null && fcmTokenRepository
                 .findByTokenAndUser_uid(request.getToken(), uid)
                 .isEmpty()) {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class FcmService {
     private final FcmTokenRepository fcmTokenRepository;
 
+    // FEADBACK 동작 중 오류가 발생하면 transactional 이 없어서 데이터 불일치가 발생합니다.
     public void deleteByFcmToken(FcmDeleteRequestDto requestDto) {
         List<FcmToken> fcmTokenList = fcmTokenRepository.findByTokenAndUser_uid(requestDto.getToken(), requestDto.getUid());
         fcmTokenRepository.deleteAll(fcmTokenList);

@@ -51,6 +51,9 @@ public class UserController {
                 DefaultRes.res(StatusCode.OK, ResponseMessage.EXISTING_USER, existingUser),
                 HttpStatus.OK);
         }
+
+        // getExistingUser, save가 같은 클래스에 속합니다. 이 부분의 코드를 정제할 수 있을 것 같아요.
+        // getExistingUser 에서는 이미 있는 유저면 exception을 던지게 하는건 어떨까요?
         return new ResponseEntity<>(
             DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER,
                 userService.save(request)), HttpStatus.CREATED);

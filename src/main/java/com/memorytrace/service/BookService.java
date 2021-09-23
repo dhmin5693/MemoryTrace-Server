@@ -69,6 +69,8 @@ public class BookService {
             .findByUidAndIsWithdrawal(uid, (byte) 0,
                 pageRequestDto.getPageableWithBookSort(pageRequestDto));
 
+        // FEEDBACK try 코드가 반복되네요.
+        // 이미 ControllerAdvice 를 활용하고 있는데 그렇게 해보는건 어떨까요?
         try {
             List<BookListResponseDto.BookList> bookLists = userBook.stream()
                 .map(book -> new BookListResponseDto().new BookList(book))
@@ -123,6 +125,7 @@ public class BookService {
                 .getPrincipal())
                 .getUid();
 
+            // FEEDBACK 쿼리는 필요한 순간에 호출해주세요. 성능 상 낭비가 됩니다. 128 -> 135로 옮기는게 좋겠네요.
             Optional<Book> book = bookRepository.findByBidAndUser_Uid(bid, uid);
 
             List<UserBook> userBookList = userBookRepository
